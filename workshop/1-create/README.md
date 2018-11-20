@@ -3,22 +3,22 @@
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
 # **Amazon Elastic File System (Amazon EFS)**
 
-## Create File System Tutorial
+## Create
 
-### Version 1.0.1
+### Version 2018.11
 
-efs-cfst-1.0.1
+efs.wrkshp.2018.11
 
 ---
 
-© 2017 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
+© 2018 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
 
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
 
 ### Table of Contents  
-[Tutorial Overview](#tutorial-overview) 
+
 
 [1. Create an Amazon VPC](#step-1)
 
@@ -48,7 +48,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ### Overview
 
-This tutorial is designed to create an Amazon EFS environment for subsequent tutorials which are designed to help you better understand the distributed data storage design of Amazon Elastic File System (Amazon EFS) and how to best leverage this design by taking advantage of scale-out achitectures.
+This workshop is designed to create an Amazon EFS environment for subsequent sections which are designed to help you better understand the distributed data storage design of Amazon Elastic File System (Amazon EFS) and how to best leverage this design by taking advantage of scale-out achitectures.
 
 ### Prerequisites
 
@@ -61,54 +61,36 @@ Verify that the key pair is created in the same AWS region you will use for the 
 
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
 
-## Tutorial
-### Step 1: Create an Amazon Virtual Private Cloud (Amazon VPC)
+## Workshop: Create an Amazon Elastic File System (Amazon EFS) file system
 
-Click on the ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below in the desired AWS region to create the AWS Cloudformation stack that will create an Amazon VPC in your AWS account. This VPC will host the Amazon EFS file system and the other AWS resources created in this tutorial. Use the following parameters and the screenshot below as a guide to enter the appropriate AWS CloudFormation parameter values.
+### Step 1: Identify a VPC where you want to create an EFS file system
 
-#### Parameters
+- Identify an existing VPC id (either one you had created prior to starting this workshop or the VPC Id from VPC1 created from the prerequisites CloudFormation stack)
 
-- Select three (3) Availability Zones
+### Step 2: Create a file system using the Amazon EFS Management Console
 
-- Use default Network Configuration parameters
+- Click on the link below to log in to the Amazon EFS Management Console in the same AWS region where you created your VPCs. 
 
-- Select an existing Amazon EC2 key pair
 
-- Use the default NAT instance size
+| AWS Region Code | Region Name |
+| :--- | :--- 
+| us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/efs/home?region=us-east-1#/wizard/1) |
+| us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| us-west-1 | [US West (N. California)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| ap-northeast-2 | [Asia Pacific (Seoul)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| ap-southeast-1 | [Asia Pacific (Singapore)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
 
-- Use all other default parameter values
 
----
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.png)
-
----
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-vpc-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-vpc.yml) |
-
----
-
-### Step 2:
-### Create Amazon Elastic File System (Amazon EFS) w/ data and CloudWatch dashboard, alarms, and size metric
+### Create Amazon Elastic File System (Amazon EFS)
 
 #### Overview
 
 This AWS Cloudformation template, and nested templates, will create an Amazon EFS file system and other AWS resources to monitor and send notifications if the burst credit balance of the file system drops below predefined thresholds. These alarms and other AWS CloudWatch metrics, including a file system size custom metric are added as widgets to a CloudWatch dashboard.
-
-Throughput on Amazon EFS scales as a file system grows. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. Each file system earns credits over time at a baseline rate that is determined by the size of the file system, and uses credits whenever it reads or writes data. The baseline rate is 50 MiB/s per TiB of storage (equivalently, 50 KiB/s per GiB of storage). Accumulated burst credits give the file system permission to drive throughput above its baseline rate. When a file system has a positive burst credit balance, it can burst. The burst rate is 100 MiB/s per TiB of storage (equivalently, 100 KiB/s per GiB of storage).
-
-If a workload accessing a file system relies on the burst throughput for normal operations, running out of burst credits could negatively impact the workload so monitoring the file system's burst credit balance is essential. This AWS CloudFormation template will create two Amazon CloudWatch alarms that will send email notifications if the burst credit balance drops below two predefined thresholds, a 'Warning' threshold and a 'Critical' threshold.  These thresholds are based on the number of minutes it would take to completely use all burst credits if the file system was being driven at the highest throughput rate possible, the permitted throughput rate. You enter these minute variables as input parameters in the Cloudformation template. The 'Warning' threshold and has a default value of 180 minutes. This means that a CloudWatch alarm will send an email notification 180 minutes before the credit balance drops to zero, based on the latest permitted throughput rate. The second alarm and notification is a 'Critical' notification and has a default value of 60 minutes. This alarm will send an email notification 60 minutes before the credit balance drops to zero, based on the latest permitted throughput rate. Permitted throughput is dynamic, scaling up as the file systems grows and scaling down as the file system shrinks. Therefore a third and fourth alarm is create that monitors permitted throughput. If the permitted throughput increases or decreases, an email notification is sent and an Auto Scaling Group will launch an EC2 instance that dynamically resets the 'Warning' and 'Critical' thresholds based on the latest permitted throughput rate. This EC2 instance will auto terminate and a new instance will launch to reset the thresholds only when the permitted throughput rate increases or decreases.
-
-#### Sample dashboard
-
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-dashboard.png)
-
 
 #### Parameters
 
@@ -125,29 +107,10 @@ If a workload accessing a file system relies on the burst throughput for normal 
 - Accept all other parameter defaults
 
 ---
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-file-system.png)
+
+![](/images/deploy_to_aws.png)
 
 ---
-
-Click on the ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below in the same AWS region as above to create the AWS Cloudformation stack that will create an Amazon EFS file system and supporting resources in your AWS account. This stack is a series of nested templates that will:
-
-- create an Amazon EFS file system with data
-
-- create AWS CloudWatch alarms to alert when the burst credit balance thresholds are breached
-
-- create AWS CloudWatch dashboard with metrics and alarms
-
-This file system will be used in the **Performance** and **Scale-out** tutorials.
-
-
-| AWS Region Code | Name | Launch |
-| :--- | :--- | :--- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-file-system-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-file-system-master.yml) |
 
 ---
 
@@ -325,5 +288,12 @@ Creates an AWS CloudWatch Dashboard with a file system size custom metric for an
 | ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
 
 
+---
+## Next section
+### Click on the link below to go to the next Amazon EFS workshop section
+
+| [**Create**](/workshop/1-create) |
+| :---
+---
 
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
