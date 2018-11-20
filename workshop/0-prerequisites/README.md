@@ -38,7 +38,7 @@ Click on the link below in the desired AWS region to create the AWS Cloudformati
 
 #### Parameters
 
-- Select two unique CIDR blocks per VPC (default recommended)
+- Select two unique CIDR blocks, one per VPC (default recommended)
 
 - Select two (2) Availability Zones per VPC
 
@@ -65,7 +65,7 @@ Click on the link below in the desired AWS region to create the AWS Cloudformati
 ## Next section
 ### Click on the link below to go to the next Amazon EFS workshop section
 
-| [**Create**](/tutorial/create) |
+| [**Create**](/workshop/1-create) |
 | :---
 ---
 
