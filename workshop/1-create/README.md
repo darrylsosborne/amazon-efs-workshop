@@ -61,7 +61,7 @@ Verify that the key pair is created in the same AWS region you will use for the 
 
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
 
-## Workshop: Create an Amazon Elastic File System (Amazon EFS) file system
+## Create the first of two Amazon EFS file systems
 
 ### Step 1: Identify a VPC where you want to create an EFS file system
 
@@ -71,221 +71,43 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 - Click on the link below to log in to the Amazon EFS Management Console in the same AWS region where you created your VPCs. 
 
-
 | AWS Region Code | Region Name |
 | :--- | :--- 
 | us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/efs/home?region=us-east-1#/wizard/1) |
-| us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| us-west-1 | [US West (N. California)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| ap-northeast-2 | [Asia Pacific (Seoul)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| ap-southeast-1 | [Asia Pacific (Singapore)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
-| eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/efs/home?region=us-east-2#/wizard/1) |
+| us-west-1 | [US West (N. California)](https://console.aws.amazon.com/efs/home?region=us-west-1#/wizard/1) |
+| us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/efs/home?region=us-west-2#/wizard/1) |
+| ap-northeast-2 | [Asia Pacific (Seoul)](https://console.aws.amazon.com/efs/home?region=ap-northeast-2#/wizard/1) |
+| ap-southeast-1 | [Asia Pacific (Singapore)](https://console.aws.amazon.com/efs/home?region=ap-southeast-1#/wizard/1) |
+| ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/efs/home?region=ap-southeast-2#/wizard/1) |
+| ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/efs/home?region=ap-northeast-1#/wizard/1) |
+| eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/efs/home?region=eu-central-1#/wizard/1) |
 | eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
 
+- Choose the VPC you identified above in the VPC dropdown menu. If choosing the recommended value, select the VPC with "...Vpc1..." in the name.
 
-### Create Amazon Elastic File System (Amazon EFS)
+- Accept the default mount targets, subnets, IP addresses, and security groups. Click **Next Step**.
 
-#### Overview
+- Add a tag (key/value) to describe your file system. Use the information below to create tags for your file system.
 
-This AWS Cloudformation template, and nested templates, will create an Amazon EFS file system and other AWS resources to monitor and send notifications if the burst credit balance of the file system drops below predefined thresholds. These alarms and other AWS CloudWatch metrics, including a file system size custom metric are added as widgets to a CloudWatch dashboard.
+| Key | Value
+| :--- | :--- 
+| Name | reInvent 2018 EFS Workshop FS1
 
-#### Parameters
+- Accept the default performance mode **General Purpose**.
 
-- Add 100 GiB of data
+- Accept the default throughput mode **Bursting**.
 
-- Select an existing key pair
+- Accept the default to NOT enable encryption of data at rest. Leave this checkbox unchecked.
 
-- Select the default security group of the VPC created in Step 1 above
+- Click **Next Step**.
 
-- Select three (3) Availability Zones of the VPC created in Step 1 above
+- Review the configuration information and click **Create File System**.
 
-- Add an email address to the SNS Email Address field that will receive AWS CloudWatch alarm notifications
 
-- Accept all other parameter defaults
+### Step 3: Create a file system using the Amazon EFS Management Console
 
----
-
-![](/images/deploy_to_aws.png)
-
----
-
----
-
-### Step 3:
-### Confirm SNS subscription
-
-The email address entered as an input parameter will automatically be subscribed to the SNS topic and will receive an **AWS Notification - Subscription Confirmation email**. Click on the ***Confirm subscription*** link in the email.
-
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-burst-credit-balance-notifications-confirm-subscription.png)
-
----
-
-### Step 4:
-### Verify CloudWatch alarms have been created
-
-Verify all four CloudWatch alarms have been created. See the **AWS Resources** section below for the alarm names.
-
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-alarms.png)
-
-### Step 5:
-### Verify the EC2 instances terminate after a few minutes
-
-Two instances are launched from separate Auto Scaling groups.
-
-- The EC2 instance will automatically terminate once the script runs that calcualtes the burst credit balance thresholds.
-- The EC2 instance will automatically terminate once the script runs that adds data to grow the file system.
-
-
-### AWS Resources
-
-#### Amazon EFS file system
-
-One EFS file system is created within the region and mount targets in the subnets selected as parameters.  Data to grow the file system is automatically added using an EC2 instance launched from an Auto Scaling group. 
-
-#### Custom CloudWatch metric for file system size
-
-An AWS Lambda function is created and scheduled to run every minute which gets the metered size of the file system, from the describe-file-system command, and adds the value as a custom metric to CloudWatch.
-
-#### SNS Topic w/ the email address subscribed
-
-One SNS topic and subscription that receives all SNS notifications.
-
->Naming convention: {file-system-id}-notifications-{cloudformation-stack-name}
-
->```example: fs-26e6418e-notifications-efs-burst-credit-balance-notifications-6ECABFA1```
-
-#### CloudWatch Alarms
-
-Four CloudWatch alarms.
-
-- One 'Warning' alarm that alerts when the burst credit balance drops below the 'warning' threshold for 5 minutes.
-
-- One 'Critical' alarm that alerts when the burst credit balance drops below the 'critical' threshold for 5 minutes.
-
-- One burst credit balance increase threshold alarm that alerts when the permitted throughput increases for 5 minutes.
-
-- One burst credit balance decrease threshold alarm that alerts when the permitted throughput decreases for 5 minutes.
-
-CloudWatch Alarm Examples:
-
-| Warning Alarm | Critical Alarm | Permitted Throughput Increase | Permitted Throughput Decrease |
-| --- | --- | --- | ---
-| ![burst-credit-balance-warning](https://s3.amazonaws.com/aws-us-east-1/tutorial/burst-credit-balance-warning-screenshot.png) | ![burst-credit-balance-critical](https://s3.amazonaws.com/aws-us-east-1/tutorial/burst-credit-balance-critical-screenshot.png) | ![permitted-throughput-increase](https://s3.amazonaws.com/aws-us-east-1/tutorial/permitted-throughput-increase-screenshot.png) | ![permitted-throughput-decrease](https://s3.amazonaws.com/aws-us-east-1/tutorial/permitted-throughput-decrease-screenshot.png) |
-
-#### CloudWatch Dashboard
-
-A CloudWatch dashboard is created with widgets for key metrics, the burst credit balance alarms, and file systme size custom metric.
-
-CloudWatch Dashboard Example:
-
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-create-dashboard.png)
-
-#### IAM Policy & EC2 Instance Profile
-
-One IAM policy and EC2 instance profile attached to the auto scaling launch configuration. This grants API permissions for the script to run.
-
-| Allows |
-| --- |
-| cloudwatch:GetMetricStatistics |
-| cloudwatch:PutMetricAlarm |
-| autoscaling:DescribeAutoScalingGroups |
-| autoscaling:DescribeAutoScalingInstances |
-| autoscaling:UpdateAutoScalingGroup |
-| elasticfilesystem:DescribeFileSystems |
-| sns:Publish |
-
->```Policy name: efs-burst-credit-balance-cloudwatch-alarms```
-
-#### Auto Scaling Group & Launch Configuration to add data
-
-One auto scaling group and launch configuration to launch an EC2 instance that runs a script to add data that grows the file system.
-
->The auto scaling group will have a maximum size of 1, a desired size of 1, and a minimum size of 0.
-
-
-#### Auto Scaling Group & Launch Configuration dynamically calculate burst credit balance thresholds
-
-One auto scaling group and launch configuration to launch an EC2 instance that runs a script to calculate the burst credit balance thresholds.
-
->The auto scaling group will have a maximum size of 1, a desired size of 1, and a minimum size of 0.
-
->The launch configuration will launch instances with no EC2 key-pair and the security group created above. A script is dynamically generated in the /tmp directory. This script will run at boot-time and will calculate the burst credit balance thresholds.
-
-
----
-## Next tutorial
-### Click on the link below to go to the next Amazon EFS tutorial
-
-| Tutorial | Link
-| --- | ---
-| **Performance** | [![](/images/efs_tutorial.png)](/tutorial/performance) |
-
----
-## Bonus
-### Individual CloudFormation Templates for existing Amazon EFS file systems
-
-Below are the unnested CloudFormation templates from above that can be run individually against an existing file system. This allows you to add the features highlighted in this tutorial to an existing file system, like...
-
-- adding data to grow a file system
-- creating CloudWatch alarms to monitor burst credit balance and a CloudWatch dashboard with widgets for the burst credit balance alarms, and other important file system metrics, including a custom metric for file system size (this has the next two tools combined into one)
-- creating just the CloudWatch alarms to monitor burst credit balance
-- creating just the CloudWatch dasboard with widgets for important file system metrics, including a file system size custom  metric
-
-
-### Add data to grow a file system
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-add-data&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-add-data.yml) |
-
-### Create an AWS CloudWatch Dashboard and Alarms to a file system
-
-Creates an AWS CloudWatch Dashboard with a file system size custom metric and CloudWatch Alarms to monitor Burst Credit Balance to an existing file system. This template is a combination of the following two templates.
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor-and-burst-credit-balance-alarms.yml) |
-
-### Create AWS CloudWatch Alarms to a file system
-
-Creates AWS CloudWatch Alarms to monitor Burst Credit Balance of an existing file system.
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-alarms&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-burst-credit-balance-alarms.yml) |
-
-
-
-### Create an AWS CloudWatch Dashboard for a file system
-
-Creates an AWS CloudWatch Dashboard with a file system size custom metric for an existing file system.
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-create-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-dashboard-with-size-monitor.yml) |
+- Use the steps above to create a file system using the Amazon EFS Management Console, except create the file system in the second VPC (VPC2) that was created from the prerequisites CloudFormation stack.
 
 
 ---
