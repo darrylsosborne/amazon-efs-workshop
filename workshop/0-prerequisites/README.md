@@ -46,9 +46,20 @@ Click on the link below in the desired AWS region to create the AWS Cloudformati
 
 ---
 
+Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create two Amazon VPCs in your AWS account. 
+
 | AWS Region Code | Region Name |
 | :--- | :--- 
 | us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| us-west-1 | [US West (N. California)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| ap-northeast-2 | [Asia Pacific (Seoul)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| ap-southeast-1 | [Asia Pacific (Singapore)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| eu-central-1 | [EU (Frankfurt)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
+| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
 
 ---
 ## Next section
