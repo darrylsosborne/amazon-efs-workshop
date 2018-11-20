@@ -17,35 +17,6 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ---
 
-### Table of Contents  
-
-
-[1. Create an Amazon VPC](#step-1)
-
-[2. Create an Amazon EFS file system](#step-2) 
-
-[3. Confirm SNS subscription](#step-3)
-
-[4. Verify CloudWatch alarms](#step-4)
-
-[5. Verify the EC2 instances terminates](#step-5)
-
-[6. Next tutorial](#next-tutorial)
-
-[7. Bonus](#bonus)
-
- [- Add data to grow a file system](#add-data-to-grow-a-file-system)
-
- [- Create an AWS CloudWatch Dashboard and Alarms to a file system](#create-an-aws-cloudwatch-dashboard-and-alarms-to-a-file-system)
-
- [- Create AWS CloudWatch Alarms to a file system](#create-aws-cloudwatch-alarms-to-a-file-system)
-
- [- Create an AWS CloudWatch Dashboard for a file system](#create-an-aws-cloudwatch-dashboard-for-a-file-system)
-
----
-
-## Tutorial Overview
-
 ### Overview
 
 This workshop is designed to create an Amazon EFS environment for subsequent sections which are designed to help you better understand the distributed data storage design of Amazon Elastic File System (Amazon EFS) and how to best leverage this design by taking advantage of scale-out achitectures.
@@ -107,14 +78,22 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Step 3: Create a file system using the Amazon EFS Management Console
 
-- Use the steps above to create a file system using the Amazon EFS Management Console, except create the file system in the second VPC (VPC2) that was created from the prerequisites CloudFormation stack.
+- Use the steps above to create a file system using the Amazon EFS Management Console, except use the following information where appropriate.
+
+- Choose the other VPC you identified above in the VPC dropdown menu. If choosing the recommended value, select the VPC with "...Vpc2..." in the name.
+
+- Add a tag (key/value) to describe your file system. Use the information below to create tags for your file system.
+
+| Key | Value
+| :--- | :--- 
+| Name | reInvent 2018 EFS Workshop FS2
 
 
 ---
 ## Next section
 ### Click on the link below to go to the next Amazon EFS workshop section
 
-| [**Create**](/workshop/1-create) |
+| [**Create**](/workshop/2-monitor) |
 | :---
 ---
 
