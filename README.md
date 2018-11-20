@@ -22,7 +22,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 ---
 
 ### Table of Contents  
-[Workshop](#workshop) 
+
 
 [Prerequisites](#0-prerequisites)
 
@@ -42,7 +42,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 ### Workshop
 
 This workshop designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput. You will also gain an understanding of the different performance and throughput modes a file system can be using.
-#
+
 ### Prerequisites [optional]
 This section is an AWS Cloudformation template that will create two Amazon VPCs with Internet Gateways, Security Groups, and routing tables to create isolate networks for this workshop. It is highly recommended to setup these prerequisites. If you decide to use your own VPCs, make sure they don't have overlapping CIDR blocks, allow traffic within the default security group, and allow SSH access from your laptop.
 
