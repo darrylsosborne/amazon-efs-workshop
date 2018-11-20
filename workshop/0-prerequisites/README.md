@@ -42,7 +42,7 @@ Click on the link below in the desired AWS region to create the AWS Cloudformati
 
 - Select two (2) Availability Zones per VPC
 
-![](../images/efs_workshop_prerequisites_parameters.png)
+![](./images/efs_workshop_prerequisites_parameters.png)
 
 ---
 
