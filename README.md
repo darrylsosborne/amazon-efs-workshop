@@ -1,6 +1,6 @@
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
+![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
 
 
 # **Amazon Elastic File System (Amazon EFS)**
@@ -26,9 +26,9 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 [Prerequisites](#prerequisites)
 
-[1. Create a file system](#1-create-a-file-system)
+[1. Create](#1-create)
 
-[2. Monitor](#2-monitoring)
+[2. Monitor](#2-monitor)
 
 [3. Performance](#3-performance) 
 
@@ -50,27 +50,27 @@ Click on the link below to go to the **Pre-requisites** section. Once you've fin
 
 | Workshop 
 | :---
-| [**Prerequisites**](/workshop/prerequisites)
+| [**Prerequisites**](/workshop/0-prerequisites)
 
 
-### 1. Create a file system
-This section is a set of AWS Cloudformation templates that will create an Amazon EFS file system and pre-load data to grow the file system to obtain higher levels of IOPS and throughput. Throughput and IOPS on Amazon EFS scales as a file system grows, so larger file systems are able to achieve higher levels of throughput and IOPS. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. File systems can be monitored using AWS CloudWatch metrics. These Cloudformation templates will also create an AWS CloudWatch dashboard, custom metrics, alarms, scheduled events, AWS Lambda function, SNS notification, and an Auto Scaling group to monitor and dynamically adjust alarm thresholds as the file system grows and shrinks.
+### 1. Create
+This section is a guide to create two Amazon EFS file systems using default performance and throughput modes.
 
-Click on the link below to go to the **Create a file system** workshop. Once you've finished that workshop move on to **Monitoring**.
+Click on the link below to go to the **Create** workshop. Once you've finished that workshop move on to **Monitor**.
 
 | Workshop 
 | :---
-| [**Create a file system**](/workshop/create-file-system)
+| [**Create**](/workshop/1-create)
 
 
-### 2. Monitoring
+### 2. Monitor
 This section is a guide to setup an AWS CloudWatch dashboard with widgets to help monitor how your workload is driving an Amazon EFS file system. Once you've finished that workshop, move on to **Performance**.
 
-Click on the link below to go to the **Monitoring** section. 
+Click on the link below to go to the **Monitor** section. 
 
 | Workshop
 | :---
-| [**Monitoring**](/workshop/monitoring)
+| [**Monitor**](/workshop/2-monitor)
 
 
 ### 3. Performance
@@ -83,7 +83,7 @@ Click on the link below to go to the **Performance** workshop. Once you've finis
 
 | Workshop
 | :---
-| [**Performance**](/workshop/performance) |
+| [**Performance**](/workshop/3-performance) |
 
 
 ### 4. Accessibility
@@ -93,7 +93,7 @@ Click on the link below to go to the **Accessibility** workshop. Once you've fin
 
 | Workshop
 | :---
-| [**Accessibility**](/workshop/accessibility) |
+| [**Accessibility**](/workshop/4-accessibility) |
 
 
 ### 5. Scale-out
@@ -103,7 +103,7 @@ Click on the link below to go to the **Scale-out** workshop.
 
 | Workshop
 | :---
-| [**Scale-out**](/workshop/scale-out) |
+| [**Scale-out**](/workshop/5-scale-out) |
 
 ---
 
