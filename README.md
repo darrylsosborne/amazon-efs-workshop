@@ -46,30 +46,24 @@ This section is an AWS Cloudformation template that will create two Amazon VPCs 
 
 Click on the link below to go to the **Pre-requisites** section. Once you've finished that section, move on to **Create a file system**.
 
-| Workshop 
-| :---
 | [**Prerequisites**](/workshop/0-prerequisites)
-
+| :---
 
 ### 1. Create
 This section is a guide to create two Amazon EFS file systems using default performance and throughput modes.
 
 Click on the link below to go to the **Create** workshop. Once you've finished that workshop move on to **Monitor**.
 
-| Workshop 
-| :---
 | [**Create**](/workshop/1-create)
-
+| :---
 
 ### 2. Monitor
 This section is a guide to setup an AWS CloudWatch dashboard with widgets to help monitor how your workload is driving an Amazon EFS file system. Once you've finished that workshop, move on to **Performance**.
 
 Click on the link below to go to the **Monitor** section. 
 
-| Workshop
-| :---
 | [**Monitor**](/workshop/2-monitor)
-
+| :---
 
 ### 3. Performance
 This section is a set of scripts that will demonstrate:
@@ -79,20 +73,16 @@ This section is a set of scripts that will demonstrate:
 
 Click on the link below to go to the **Performance** workshop. Once you've finished that workshop move on to **Accessibility**.
 
-| Workshop
-| :---
 | [**Performance**](/workshop/3-performance) |
-
+| :---
 
 ### 4. Accessibility
 This section is a set of steps to test accessibility over a VPC-peering connection and from Amazon Workspaces.
 
 Click on the link below to go to the **Accessibility** workshop. Once you've finished that workshop move on to **Scale-out**.
 
-| Workshop
-| :---
 | [**Accessibility**](/workshop/4-accessibility) |
-
+| :---
 
 ### 5. Scale-out
 This section is a Cloudformation template that will create an Amazon EC2 spot fleet and download objects in parallel from an Amazon S3 bucket.
