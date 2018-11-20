@@ -59,7 +59,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 - Accept the default mount targets, subnets, IP addresses, and security groups. Click **Next Step**.
 
-- Add a tag (key/value) to describe your file system. Use the information below to create tags for your file system.
+- Add a tag (key/value) to describe your file system. Use the information below to create a tag for your file system.
 
 | Key | Value
 | :--- | :--- 
@@ -78,11 +78,11 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ### Step 3: Create a file system using the Amazon EFS Management Console
 
-- Use the steps above to create a file system using the Amazon EFS Management Console, except use the following information where appropriate.
+- Use the steps above to create a file system using the Amazon EFS Management Console, except use the following information where appropriate:
 
 - Choose the other VPC you identified above in the VPC dropdown menu. If choosing the recommended value, select the VPC with "...Vpc2..." in the name.
 
-- Add a tag (key/value) to describe your file system. Use the information below to create tags for your file system.
+- Add a tag (key/value) to describe your file system. Use the information below to create a tag for your file system.
 
 | Key | Value
 | :--- | :--- 

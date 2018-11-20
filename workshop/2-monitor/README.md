@@ -3,11 +3,11 @@
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
 # **Amazon Elastic File System (Amazon EFS)**
 
-## Monitoring Tutorial
+## Monitor
 
-### Version 1.0.1
+### Version 2018.11
 
-efs-mt-1.0.1
+efs.wrkshp.2018.11
 
 ---
 
@@ -17,11 +17,9 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ---
 
-## Tutorial Overview
-
 ### Overview
 
-This tutorial is designed to help you better understand how to use Amazon CloudWatch to monitor the performance of your Amazon EFS file systems.
+This workshop is designed to help you better understand how to use Amazon CloudWatch to monitor the performance of your Amazon EFS file systems.
 
 ### Prerequisites
 
@@ -125,26 +123,29 @@ For more information about Amazon CloudWatch, please refer to https://docs.aws.a
 
 ### Launch the AWS CloudFormation Stack
 
-Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. You must also have an Amazon EFS file system in this region to use with this tutorial. It creates an Amazon CloudWatch dashboard with widgets displaying file system performance metrics (throughput, IOPS, etc.) using metric math expressions. The metric math expressions described above are included in this [template](/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml). An AWS Lambda function is also created and scheduled to run every minute which gets the metered size of the file system, from the describe-file-system command, and adds the value as a custom metric to CloudWatch. This custom metric is added to the ***File system metrics*** widget.
+Click the link below to create the AWS CloudFormation stack in the same region as your VPCs and EFS file systems. It creates an Amazon CloudWatch dashboard with widgets displaying file system performance metrics (throughput, IOPS, etc.) using metric math expressions. The metric math expressions described above are included in this [template](/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml).
 
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| us-west-1 |US West (N. California)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| ap-northeast-1 |AP (Tokyo)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
-| ap-northeast-2 |AP (Seoul)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=efs-monitoring-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-tutorial/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml) |
+| AWS Region Code | Region Name |
+| :--- | :--- 
+| us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| us-west-1 | [US West (N. California)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| ap-northeast-2 | [Asia Pacific (Seoul)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| ap-southeast-1 | [Asia Pacific (Singapore)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 
-After launching the AWS CloudFormation Stack above, you should see a new dashboard in your Amazon CloudWatch console using the naming convention ***aws-region***_***efs-filesystem-id***_mm.
+After launching the AWS CloudFormation Stack above, you should see a new dashboard in your Amazon CloudWatch console using the naming convention ***aws-region***_***efs-filesystem-id***.
 
-![](/images/cw_dashboard_mm_efs_03.png)
+---
+## Next section
+### Click on the link below to go to the next Amazon EFS workshop section
 
-## Troubleshooting
+| [**Create**](/workshop/2-monitor) |
+| :---
+---
+
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
-
-## License
-This library is licensed under the Amazon Software License.
