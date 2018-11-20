@@ -4,11 +4,11 @@
 
 # **Amazon Elastic File System (Amazon EFS)**
 
-## Tutorials
+## Workshop
 
-### Version 1.0.0
+### Version 2018.02
 
-efs-t-1.0.0
+efs.wrkshp.2018.02
 
 ---
 
@@ -19,50 +19,64 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 ---
 
 ### Table of Contents  
-[Tutorials](#tutorials) 
+[Workshops](#workshops) 
 
-[1. Create a file system](#1-create-a-file-system) 
+[1. Create a file system](#1-create-a-file-system)
 
 [2. Performance](#2-performance) 
 
-[3. Scale-out](#3-scale-out) 
+[3. Scale-out](#3-scale-out)
+
+[4. Monitoring](#3-monitoring)
 
 ---
 
-### Tutorials
+### Workshop
 
-These three (3) tutorials are designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
+This workshop designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
 #
 ### 1. Create a file system
-This tutorial is a set of AWS Cloudformation templates that will create an Amazon EFS file system and pre-load data to grow the file system to obtain higher levels of IOPS and throughput. Throughput and IOPS on Amazon EFS scales as a file system grows, so larger file systems are able to achieve higher levels of throughput and IOPS. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. File systems can be monitored using AWS CloudWatch metrics. These Cloudformation templates will also create an AWS CloudWatch dashboard, custom metrics, alarms, scheduled events, AWS Lambda function, SNS notification, and an Auto Scaling group to monitor and dynamically adjust alarm thresholds as the file system grows and shrinks.
+This section is a set of AWS Cloudformation templates that will create an Amazon EFS file system and pre-load data to grow the file system to obtain higher levels of IOPS and throughput. Throughput and IOPS on Amazon EFS scales as a file system grows, so larger file systems are able to achieve higher levels of throughput and IOPS. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. File systems can be monitored using AWS CloudWatch metrics. These Cloudformation templates will also create an AWS CloudWatch dashboard, custom metrics, alarms, scheduled events, AWS Lambda function, SNS notification, and an Auto Scaling group to monitor and dynamically adjust alarm thresholds as the file system grows and shrinks.
 
-Click on the ![](/images/efs_tutorial.png) link below to go to the **Create a file system** tutorial. Once you've finished that tutorial move on to **Performance**.
+Click on the ![](/images/efs_workshop.png) link below to go to the **Create a file system** workshop. Once you've finished that workshop move on to **Performance**.
 
-| Tutorial | Link
+| Workshop | Link
 | --- | ---
-| **Create a file system** | [![](/images/efs_tutorial.png)](/tutorial/create-file-system) |
+| **Create a file system** | [![](/images/efs_workshop.png)](/workshop/create-file-system) |
+
 
 ### 2. Performance
-This tutorial is a set of scripts that will demonstrate:
+This section is a set of scripts that will demonstrate:
 - different instance types provide different levels of network performance when accessing a file system
 - different I/O sizes (block sizes) and sync() freqencies (the rate data is persisted to disk) effects file system throughput
 - increasing the number of threads accessing a file system will increase IOPS and throughput
 
-Click on the ![](/images/efs_tutorial.png) link below to go to the **Performance** tutorial. Once you've finished that tutorial move on to **Scale-out**.
+Click on the ![](/images/efs_workshop.png) link below to go to the **Performance** workshop. Once you've finished that workshop move on to **Scale-out**.
 
-| Tutorial | Link
+| Workshop | Link
 | --- | ---
-| **Performance** | [![](/images/efs_tutorial.png)](/tutorial/performance) |
+| **Performance** | [![](/images/efs_workshop.png)](/workshop/performance) |
 
 
 ### 3. Scale-out
-This tutorial is a Cloudformation template that will create an Amazon EC2 spot fleet and download objects in parallel from an Amazon S3 bucket.
+This section is a Cloudformation template that will create an Amazon EC2 spot fleet and download objects in parallel from an Amazon S3 bucket.
 
-Click on the ![](/images/efs_tutorial.png) link below to go to the **Scale-out** tutorial. Once you've finished that tutorial move on to the **Scenarios**.
+Click on the ![](/images/efs_workshop.png) link below to go to the **Scale-out** workshop. Once you've finished that workshop move on to the **Scenarios**.
 
-| Tutorial | Link
+| Workshop | Link
 | --- | ---
-| **Scale-out** | [![](/images/efs_tutorial.png)](/tutorial/scale-out) |
+| **Scale-out** | [![](/images/efs_workshop.png)](/workshop/scale-out) |
+
+
+### 4. Monitoring
+This section is a guide to setup an AWS CloudWatch dashboard with widgets to help monitor how your workload is driving an Amazon EFS file system.
+
+Click on the ![](/images/efs_tutorial.png) link below to go to the **Monitoring** tutorial. 
+
+| Workshop | Link
+| --- | ---
+| **Monitoring** | [![](/images/efs_tutorial.png)](/tutorial/monitoring) |
+
 
 ---
 
