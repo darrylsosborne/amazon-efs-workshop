@@ -24,7 +24,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 ### Table of Contents  
 
 
-[Prerequisites](#0-prerequisites)
+[Prerequisites](#prerequisites)
 
 [1. Create a file system](#1-create-a-file-system)
 
