@@ -99,8 +99,6 @@ This section is a Cloudformation template that will create an Amazon EC2 spot fl
 
 Click on the link below to go to the **Scale-out** workshop.
 
-
-| :--- |
 | [**Scale-out**](/workshop/5-scale-out) |
 
 ---
