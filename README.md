@@ -44,7 +44,7 @@ This workshop designed to help you better understand the performance characteris
 ### Prerequisites [optional]
 This section is an AWS Cloudformation template that will create two Amazon VPCs with Internet Gateways, Security Groups, and routing tables to create isolate networks for this workshop. It is highly recommended to setup these prerequisites. If you decide to use your own VPCs, make sure they don't have overlapping CIDR blocks, allow traffic within the default security group, and allow SSH access from your laptop.
 
-Click on the link below to go to the **Pre-requisites** section. Once you've finished that section, move on to **Create a file system**.
+Click on the link below to go to the **Pre-requisites** section. Once you've finished that section, move on to **Create**.
 
 | [**Prerequisites**](/workshop/0-prerequisites)
 | :---
