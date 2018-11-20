@@ -1,3 +1,6 @@
+| :---
+| ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/AWS_logo_PMS_300x180.png) | ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/architecture-product-card_Amazon_Elastic_File_System.svg)
+
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/AWS_logo_PMS_300x180.png)
 
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/architecture-product-card_Amazon_Elastic_File_System.svg)
