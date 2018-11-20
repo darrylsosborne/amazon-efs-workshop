@@ -127,7 +127,7 @@ Click the link below to create the AWS CloudFormation stack in the same region a
 
 | AWS Region Code | Region Name |
 | :--- | :--- 
-| us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-workshop-cw-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 | us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-workshop-cw-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 | us-west-1 | [US West (N. California)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=efs-workshop-cw-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 | us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-workshop-cw-dashboard&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
