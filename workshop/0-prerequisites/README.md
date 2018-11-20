@@ -3,7 +3,7 @@
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
 # **Amazon Elastic File System (Amazon EFS)**
 
-## Create
+## Prerequisites
 
 ### Version 2018.11
 
@@ -14,33 +14,6 @@ efs.wrkshp.2018.11
 © 2018 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
 
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
-
----
-
-### Table of Contents  
-[Tutorial Overview](#tutorial-overview) 
-
-[1. Create an Amazon VPC](#step-1)
-
-[2. Create an Amazon EFS file system](#step-2) 
-
-[3. Confirm SNS subscription](#step-3)
-
-[4. Verify CloudWatch alarms](#step-4)
-
-[5. Verify the EC2 instances terminates](#step-5)
-
-[6. Next tutorial](#next-tutorial)
-
-[7. Bonus](#bonus)
-
- [- Add data to grow a file system](#add-data-to-grow-a-file-system)
-
- [- Create an AWS CloudWatch Dashboard and Alarms to a file system](#create-an-aws-cloudwatch-dashboard-and-alarms-to-a-file-system)
-
- [- Create AWS CloudWatch Alarms to a file system](#create-aws-cloudwatch-alarms-to-a-file-system)
-
- [- Create an AWS CloudWatch Dashboard for a file system](#create-an-aws-cloudwatch-dashboard-for-a-file-system)
 
 ---
 
@@ -69,9 +42,11 @@ Click on the link below in the desired AWS region to create the AWS Cloudformati
 
 - Select two (2) Availability Zones per VPC
 
+![](../images/efs_workshop_prerequisites_parameters.png)
+
 ---
 
-| AWS Region Code | Name |
+| AWS Region Code | Region Name |
 | :--- | :--- 
 | us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-workshop-prerequisites&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/reinvent2018_efs_workshop_prerequisites.yaml) |
 
