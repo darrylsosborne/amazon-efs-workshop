@@ -12,7 +12,7 @@ efs.wrkshp.2018.02
 
 ---
 
-© 2017 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
+© 2018 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
 
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
@@ -20,6 +20,8 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ### Table of Contents  
 [Workshops](#workshops) 
+
+[0. Pre-requisites](#0-pre-requisites)
 
 [1. Create a file system](#1-create-a-file-system)
 
@@ -33,15 +35,25 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ### Workshop
 
-This workshop designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput.
+This workshop designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types affects file system IOPS and throughput. You will also gain an understanding of the different performance and throughput modes a file system can be using.
 #
+### 0. Pre-requisites [optional]
+This section is an AWS Cloudformation template that will create two Amazon VPCs with Internet Gateways, Security Groups, and routing tables to create isolate networks for this workshop. It is highly recommended to use setup these pre-requisites. If you decide to use your own VPCs, make sure they allow SSH access from your laptop.
+
+Click on the link below to go to the **Pre-requisites** section. Once you've finished that section, move on to **Create a file system**.
+
+| Workshop 
+| ---:
+| [**Pre-requisites**](/workshop/pre-requisites)
+
+
 ### 1. Create a file system
 This section is a set of AWS Cloudformation templates that will create an Amazon EFS file system and pre-load data to grow the file system to obtain higher levels of IOPS and throughput. Throughput and IOPS on Amazon EFS scales as a file system grows, so larger file systems are able to achieve higher levels of throughput and IOPS. Because file-based workloads are typically spiky—driving high levels of throughput for short periods of time, and low levels of throughput the rest of the time—Amazon EFS is designed to burst to high throughput levels for periods of time. Amazon EFS uses a credit system to determine when file systems can burst. File systems can be monitored using AWS CloudWatch metrics. These Cloudformation templates will also create an AWS CloudWatch dashboard, custom metrics, alarms, scheduled events, AWS Lambda function, SNS notification, and an Auto Scaling group to monitor and dynamically adjust alarm thresholds as the file system grows and shrinks.
 
-Click on the ![](/images/efs_workshop.png) link below to go to the **Create a file system** workshop. Once you've finished that workshop move on to **Performance**.
+Click on the link below to go to the **Create a file system** workshop. Once you've finished that workshop move on to **Performance**.
 
-| Workshop | Link
-| --- | ---
+| Workshop 
+| ---: | ---
 | **Create a file system** | [![](/images/efs_workshop.png)](/workshop/create-file-system) |
 
 
