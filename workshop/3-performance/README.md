@@ -3,44 +3,48 @@
 ![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_available.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ingergration.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_ecryption-lock.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_fully-managed.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_lowcost-affordable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_performance.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_scalable.png)![](https://s3.amazonaws.com/aws-us-east-1/tutorial/100x100_benefit_storage.png)
 # **Amazon Elastic File System (Amazon EFS)**
 
-## Performance Tutorial
+## Performance
 
-### Version 1.0.1
+### Version 2018.11
 
-efs-pt-1.0.1
+efs.wrkshp.2018.11
 
 ---
 
-© 2017 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
+© 2018 Amazon Web Services, Inc. and its affiliates. All rights reserved. This work may not be  reproduced or redistributed, in whole or in part, without prior written permission from Amazon Web Services, Inc. Commercial copying, lending, or selling is prohibited.
 
 Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
 ---
 
-## Tutorial Overview
-
 ### Overview
 
-This tutorial is designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types have a profound effect on file system performance.
+This workshop is designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types have a profound effect on file system performance.
 
-This tutorial is divided into four sections.
+This tutorial is divided into five sections.
 
-- **Section 1 -** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
+- **Section 1 -** launch 3 Amazon EC2 instances all different instance types. Install EFS-utils, and other utilities, and generate sample data.
 
-- **Section 2 -** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
+- **Section 2 -** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
 
-- **Section 3 -** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
+- **Section 3 -** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance.
 
-- **Section 4 -** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
+- **Section 4 -** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
+
+- **Section 5 -** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
 
 
 ### Prerequisites
 
-The AWS CloudFormation template below will create the compute environment you need to run the tutorial. You must have an existing Amazon EFS file system in the region where you launch the CloudFormation stack and it must have mount targets in the VPC where you launch your EC2 instances. You will need to provide the EFS file system id as a parameter value when you launch the CloudFormation stack. If you don't already have a file system you can use for this tutorial, click the link to go to the [***Create a file system***](/tutorial/create-file-system) tutorial.
+* An AWS account
+* An Amazon EFS file system
+* An Amazon EC2 key pair
 
 ### The Environment
 
-The AWS CloudFormation template will launch three EC2 instances, each in their own Auto Scaling group. Please use the recommended default instance types for each Auto Scaling group. The file system, whose id you entered as a CloudFormation parameter, will be automatically mounted to each EC2 instance. These instances will also have a 20 GB gp2 EBS data volume mounted and 5GB of test data will be generated on that volume. The following open-source applications will also be installed on each instance.
+You will install a number of utilities to test different characteristics and EFS.
+
+- **ioping -** is a console application to generate a read/write workload against a mount
 
 - **nload -** is a console application that monitors network traffic and bandwidth usage in real time
 
@@ -54,73 +58,106 @@ The AWS CloudFormation template will launch three EC2 instances, each in their o
 
 - **fpsync -** wraps fpart + rsync together as a multi-threaded transfer utility - included in the tools/ directory of fpart
 
-
 NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. These software packages are used for demonstration purposes only.  Follow all expressed or implied license agreements associated with these 3rd party software products.
 
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of launching this CloudFormation stack and executing the scripts included in this tutorial. This tutorial will take approximately 1 hour to complete and at a cost of ~$0.83. Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don’t continue to incur additional compute and storage charges.
 
-### Launch the AWS CloudFormation Stack
-
-Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial. Use the following parameters and the screenshot below as a guide to enter the appropriate AWS CloudFormation parameter values.
-
-#### Parameters
-
-- Use the Amazon EFS file system id from the file system created in the previous tutorial **Create File System Tutorial**
-
-- Select an existing Amazon EC2 key pair
-
-- Select the default security group of the VPC created in the previous tutorial **Create File System Tutorial** 
-
-- Select the three public subnets (e.g. **Public Subnet 1**, **Public Subnet 2**, **Public Subnet 3**)
-
-- Use all other default parameter values
-
----
-![](/images/efs_performance_parameters.png)
-
----
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-performance-tutorial.yaml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-performance-tutorial.yaml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-performance-tutorial.yaml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-performance-tutorial.yaml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-performance-tutorial.yaml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-performance-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/create-efs-resources/efs-performance-tutorial.yaml) |
-
-After launching the AWS CloudFormation Stack above, you should see three Amazon EC2 instances running in your VPC.  Each instance **Name** tag will change from "EFS Performance Tutorial - Launching..." to "EFS Performance Tutorial - Ready". Wait for the **Name** tag of each instance to read "EFS Performance Tutorial - Ready" before continuing.
-
 
 ## Section 1
+### Launch three Amazon EC2 instances and install applications
+ ___
+
+- Click on the link below to log in to the Amazon EC2 Management Console in the same AWS region where you created your VPCs and EFS file systems. 
+
+| AWS Region Code | Region Name |
+| :--- | :--- 
+| us-east-1 | [US East (N. Virginia)](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#LaunchInstanceWizard:) |
+| us-east-2 | [US East (Ohio)](https://console.aws.amazon.com/ec2/v2/home?region=us-east-2#LaunchInstanceWizard:) |
+| us-west-1 | [US West (N. California)](https://console.aws.amazon.com/ec2/v2/home?region=us-west-1#LaunchInstanceWizard:) |
+| us-west-2 | [US West (Oregon)](https://console.aws.amazon.com/ec2/v2/home?region=us-west-2#LaunchInstanceWizard:) |
+| ap-northeast-2 | [Asia Pacific (Seoul)](https://console.aws.amazon.com/ec2/v2/home?region=ap-northeast-2#LaunchInstanceWizard:) |
+| ap-southeast-1 | [Asia Pacific (Singapore)](https://console.aws.amazon.com/ec2/v2/home?region=ap-southeast-1#LaunchInstanceWizard:) |
+| ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceWizard:) |
+| ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#LaunchInstanceWizard:) |
+| eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/ec2/v2/home?region=eu-central-1#LaunchInstanceWizard:) |
+| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:) |
+
+- Launch an EC2 instance with the following configuration details. If a value isn't specified below, accept the default value. Create one EC2 instance per table below.
+
+| Configuration detail | Value |
+| :--- | :--- 
+| Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
+| Instance Type | t3.micro |
+| Number of instances | 1 |
+| Network | Select the VPC you created earlier, select a VPC with "... Vpc1..." in the name |
+| T2/T3 Unlimited | Not enabled (uncheck this checkbox) |
+| Root Volume Size (GiB) | 50 |
+| Tag | Key/Value = Name / EFS Workshop |
+| Security Group | default VPC security group |
+| Key pair | Select an existing key pair that you have access to |
+
+| Configuration detail | Value |
+| :--- | :--- 
+| Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
+| Instance Type | m4.large |
+| Number of instances | 1 |
+| Network | Select the VPC you created earlier, select a VPC with "... Vpc1..." in the name |
+| Root Volume Size (GiB) | 50 |
+| Tag | Key/Value = Name / EFS Workshop |
+| Security Group | default VPC security group |
+| Key pair | Select an existing key pair that you have access to |
+
+| Configuration detail | Value |
+| :--- | :--- 
+| Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
+| Instance Type | c5.2xlarge |
+| Number of instances | 1 |
+| Network | Select the VPC you created earlier, select a VPC with "... Vpc1..." in the name |
+| Root Volume Size (GiB) | 50 |
+| Tag | Key/Value = Name / EFS Workshop |
+| Security Group | default VPC security group |
+| Key pair | Select an existing key pair that you have access to |
+
+- SSH to each instance above
+
+- Run the following commands to install applications on each instance:
+
+```sh
+sudo yum update -y
+sudo yum install -y amazon-efs-utils parallel tree git fpart
+sudo yum install -y --enablerepo=epel nload ioping
+git clone https://github.com/bengland2/smallfile.git
+```
+- Run the following commands to mount the EFS file system and change ownership of the mount point (add a file system id of the file system you created in VPC1 on each instance:
+
+```sh
+sudo mkdir -p /mnt/efs
+sudo mount -t efs <efs-file-system-id> /mnt/efs
+sudo chown ec2-user:ec2-user /mnt/efs
+```
+
+## Section 2
 ### Compare the network performance of different EC2 instance types accessing EFS
  ___
 This section will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing EFS.
 
+### 2.1.  SSH into one Amazon EC2 instance
 
-### 1.1.  Add SSH inbound access for your IP address
-
-- Sign in to the [AWS Management Console](https://console.aws.amazon.com/console/home) and navigate to the EC2 service page
-- Select **Security Groups** on the left frame under **NETWORK & SECURITY** and select the default security group of your VPC.
-- Add an inbound rule to allow SSH access to this security group from your IP address (e.g. selecting **My IP** as the Source).
-
-### 1.2.  SSH into one Amazon EC2 instance
-
-- Start with the t2.micro instance
-- Run the command in 1.3. below and wait for it to complete.
+- Start with the t3.micro instance
+- Run the command in 2.2. below and wait for it to complete.
 - What happened after ~15GB was written?
-- Disconnect from that instance and do the same thing for the m4.large instance then the c4.2xlarge instance
+- Disconnect from that instance and do the same thing for the m4.large instance then the c5.2xlarge instance
 - What's the difference between all three instances?
-- Can you explain the performance results between the t2.micro instance and the m4.large instance?
+- Can you explain the performance results between the t3.micro instance and the m5.large instance?
 
-### 1.3.  Use dd to write 20 GB of data to EFS from each instance
-Run this command against all three instances to create a 20 GB file on EFS and monitor network traffic and throughput in real-time
+### 2.2.  Use dd to write 20 GB of data to EFS from each instance
+Run this command against all three instances to create a 20 GiB file on EFS and monitor network traffic and throughput in real-time
 ```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/20G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=20480 conv=fsync &
+time dd if=/dev/zero of=/mnt/efs/20G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=20480 conv=fsync &
 nload -u M
 ```
 
-### 1.4.  Close all SSH sessions
+### 2.3.  Close the SSH sessions to the t3.micro and m4.large instances
 #
 #
 ### Results
@@ -128,13 +165,134 @@ All EC2 instance types have different network performance characteristics so eac
 
 | Step | EC2 Instance Type | Data Size | Duration | Burst Throughput | Baseline Throughput | Average Throughput |
 | :--- | :--- | --- | --- | --- | --- | --- |
-| 1.3. | t2.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
+| 1.3. | t3.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
 | 1.3. | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
-| 1.3. | c4.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s* |
+| 1.3. | c5.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s* |
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
-## Section 2
+
+## Section 3
+### Demonstrate how multi-threaded access improves throughput and IOPS
+ ___
+This section will demonstrate how increasing the number of threads accessing EFS will significantly improve performance.
+
+### 3.1.  SSH into the c5.2xlarge EC2 instance
+
+### 3.2.  Generate 1024 zero-byte files
+
+- Run this command the SSH session of the c5.2xlarge to see how long it will take to create 1024 zero-byte files on an EFS file system using touch.
+
+```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+
+sudo mkdir -p /mnt/efs/touch/${job_name}
+
+time for i in {1..1024}; do
+  sudo touch /mnt/efs/touch/${job_name}/touch.$i;
+  done;
+```
+
+- How long did it take?
+- Why did it take so long?
+- What can you do to improve performance?
+
+### 3.3.  Generate 1024 zero-byte files
+
+- Run this command the SSH session of the c5.2xlarge to see how long it will take to create 1024 zero-byte files on an EBS volume using touch.
+
+```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+
+sudo mkdir -p /ebs/touch/${job_name}
+
+time for i in {1..1024}; do
+  sudo touch /ebs/touch/${job_name}/touch.$i;
+  done;
+```
+
+- How long did it take?
+- What's the difference between EBS and EFS?
+
+### 3.4.  Generate 1024 zero-byte files
+
+- Run this command the SSH session of the c5.2xlarge to see how long it will take to create 1024 zero-byte files on an EFS file system using touch.
+
+```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+
+sudo mkdir -p /mnt/efs/touch/${job_name}
+
+time seq 1 1024 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_name}/touch.{};
+```
+
+- How long did it take?
+- How does this compare to the first test above?
+- What can you do to improve performance?
+
+### 3.5.  Generate 1024 zero-byte files
+
+- Run this command the SSH session of the c5.2xlarge to see how long it will take to create 1024 zero-byte files on an EFS file system using touch.
+
+```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+
+sudo mkdir -p /mnt/efs/touch/${job_name}/{1..32}
+
+time seq 1 32 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_name}/{}/deleteme.{1..32};
+```
+
+- How long did it take?
+- Why is this so much faster when compared to all the tests above?
+
+### 3.6.  Write to EBS using 4 threads and sync after each block
+
+- Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+
+```sh
+time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
+```
+
+Record run time.
+
+### 3.7.  Write to EFS using 4 threads and sync after each block
+
+- Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+
+```sh
+time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
+```
+
+Record run time.
+
+### 3.4.  Write to EBS using 16 threads and sync after each block
+Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+```sh
+time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
+```
+Record run time.
+### 3.5.  Write to EFS using 16 threads and sync after each block
+Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+```sh
+time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
+```
+Record run time.
+#
+#
+### Results
+The distributed data storage design of EFS means that multi-threaded applications can drive substantial levels of aggregate throughput and IOPS. If you parallelize your writes to EFS by increasing the number of threads, you can increase the overall throughput and IOPS to EFS.
+
+| Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
+| --- | --- | --- | --- | --- | --- | --- | --- | ---
+| 3.2 | Create | 2 GB | 1 MB | 4 | After each block | EBS | 16.6 seconds | 131 MB/s |
+| 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s* |
+| 3.4 | Create | 2 GB | 1 MB | 16 | After each block | EBS | 16.4 seconds | 131 MB/s |
+| 3.5 | Create | 2 GB | 1 MB | 16 | After each block | EFS | 7.9 seconds | 271 MB/s* |
+
+*this was achieved using a file system with a permitted throughput greater than 200 MB/s
+
+
+## Section 4
 ### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
  ___
 This section will compare how different I/O sizes (block sizes) and sync frequencies (the rate data is persisted to disk) have a profound impact on performance between EBS and EFS.
