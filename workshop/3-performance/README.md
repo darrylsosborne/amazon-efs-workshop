@@ -68,7 +68,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#LaunchInstanceWizard:) |
 | ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#LaunchInstanceWizard:) |
 | eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/ec2/v2/home?region=eu-central-1#LaunchInstanceWizard:) |
-| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:) |
+| eu-west-1 | [EU West (Ireland)](https://console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:) |
 
 - Launch an EC2 instance with the following configuration details. If a value isn't specified below, accept the default value. Create one EC2 instance per table below.
 

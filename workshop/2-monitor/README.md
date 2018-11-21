@@ -136,7 +136,7 @@ Click the link below to create the AWS CloudFormation stack in the same region a
 | ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 | ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 | eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
-| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
+| eu-west-1 | [EU West (Ireland)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 
 After launching the AWS CloudFormation Stack above, you should see a new dashboard in your Amazon CloudWatch console using the naming convention ***aws-region***_***efs-filesystem-id***.
 

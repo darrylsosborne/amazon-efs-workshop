@@ -53,7 +53,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | ap-southeast-2 | [Asia Pacific (Sydney)](https://console.aws.amazon.com/efs/home?region=ap-southeast-2#/wizard/1) |
 | ap-northeast-1 | [Asia Pacific (Tokyo)](https://console.aws.amazon.com/efs/home?region=ap-northeast-1#/wizard/1) |
 | eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/efs/home?region=eu-central-1#/wizard/1) |
-| eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
+| eu-west-1 | [EU West (Ireland)](https://console.aws.amazon.com/efs/home?region=eu-west-1#/wizard/1) |
 
 - Choose the VPC you identified above in the VPC dropdown menu. If choosing the recommended value, select the VPC with "...Vpc1..." in the name.
 
