@@ -65,7 +65,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 
 ## Section 1
 ### Launch three Amazon EC2 instances and install applications
- ___
+---
 
 - Click on the link below to log in to the Amazon EC2 Management Console in the same AWS region where you created your VPCs and EFS file systems. 
 
@@ -83,7 +83,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:) |
 
 - Launch an EC2 instance with the following configuration details. If a value isn't specified below, accept the default value. Create one EC2 instance per table below.
-
+---
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
@@ -95,7 +95,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | Tag | Key/Value = Name / EFS Workshop |
 | Security Group | default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
-#
+---
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
@@ -106,7 +106,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | Tag | Key/Value = Name / EFS Workshop |
 | Security Group | default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
-#
+---
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
@@ -117,7 +117,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | Tag | Key/Value = Name / EFS Workshop |
 | Security Group | default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
-#
+---
 
 - SSH to each instance above
 
