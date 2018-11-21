@@ -30,7 +30,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 [3. Performance](#3-performance) 
 
-[4. Accessibility](#4-accessibility)
+[4. Accessible](#4-accessible)
 
 [5. Scale-out](#5-scale-out)
 
@@ -71,17 +71,17 @@ This section is a set of scripts that will demonstrate:
 - different I/O sizes (block sizes) and sync() freqencies (the rate data is persisted to disk) effects file system throughput
 - increasing the number of threads accessing a file system will increase IOPS and throughput
 
-Click on the link below to go to the **Performance** workshop. Once you've finished that workshop move on to **Accessibility**.
+Click on the link below to go to the **Performance** workshop. Once you've finished that workshop move on to **Accessible**.
 
 | [**Performance**](/workshop/3-performance) |
 | :---
 
-### 4. Accessibility
+### 4. Accessible
 This section is a set of steps to test accessibility over a VPC-peering connection and from Amazon Workspaces.
 
-Click on the link below to go to the **Accessibility** workshop. Once you've finished that workshop move on to **Scale-out**.
+Click on the link below to go to the **Accessible** workshop. Once you've finished that workshop move on to **Scale-out**.
 
-| [**Accessibility**](/workshop/4-accessibility) |
+| [**Accessible**](/workshop/4-accessible) |
 | :---
 
 ### 5. Scale-out
@@ -90,6 +90,14 @@ This section is a Cloudformation template that will create an Amazon EC2 spot fl
 Click on the link below to go to the **Scale-out** workshop.
 
 | [**Scale-out**](/workshop/5-scale-out) |
+| :---
+
+### 6. Tear-down
+This section will remind you to delete all the AWS resources you created for this workshop.
+
+Click on the link below to go to the **Scale-out** workshop.
+
+| [**Tear-down**](/workshop/6-tear-down) |
 | :---
 
 ---

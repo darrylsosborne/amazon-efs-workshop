@@ -17,11 +17,9 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 ---
 
-## Tutorial Overview
-
 ### Overview
 
-This tutorial is designed to help you better understand the distributed data storage design of Amazon Elastic File System (Amazon EFS) and how to best leverage this design by taking advantage of scale-out achitectures.
+This workshop is designed to help you better understand the distributed data storage design of Amazon Elastic File System (Amazon EFS) and how to best leverage this design by taking advantage of scale-out achitectures.
 
 ### Prerequisites
 
@@ -32,13 +30,9 @@ This tutorial is designed to help you better understand the distributed data sto
 
 If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
 
-Verify that the key pair is created in the same AWS region you will use for the tutorial.
-
-If a VPC and EFS file system have not been previously created, please refer to [Create a File System tutorial](/tutorial/create-file-system)
-
 ### The Environment
 
-The tutorial steps will launch an EC2 Spot Fleet. Please use the recommended default instance type. All instances will automatically mount the Amazon EFS file system and register with EC2 SSM, which will be used to remotely execute a script to transfer objects from Amazon S3 to Amazon EFS in parallel.
+The workshop steps will launch an EC2 Spot Fleet. Please use the recommended default instance type. All instances will automatically mount the Amazon EFS file system and register with EC2 SSM, which will be used to remotely execute a script to transfer objects from Amazon S3 to Amazon EFS in parallel.
 
 Each instance will download all S3 objects from the public dataset https://aws.amazon.com/public-datasets/dc-lidar/.
 
@@ -46,7 +40,7 @@ For more information about this dataset, please refer to http://geospatial.dcgis
 
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this tutorial. Delete all files on the EFS file system that were created during this tutorial and delete the  stack so you don’t continue to incur additional compute and storage charges.
 
-## Tutorial
+## Workshop
 
 ### Step 1: Create Amazon EC2 Spot Fleet Role
 
