@@ -95,7 +95,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | Tag | Key/Value = Name / EFS Workshop |
 | Security Group | default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
-
+#
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
@@ -106,7 +106,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | Tag | Key/Value = Name / EFS Workshop |
 | Security Group | default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
-
+#
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
@@ -117,6 +117,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | Tag | Key/Value = Name / EFS Workshop |
 | Security Group | default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
+#
 
 - SSH to each instance above
 
