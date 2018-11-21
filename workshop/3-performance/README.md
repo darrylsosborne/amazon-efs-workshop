@@ -83,7 +83,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 | eu-west-1 | [EU East (Ireland)](https://console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:) |
 
 - Launch an EC2 instance with the following configuration details. If a value isn't specified below, accept the default value. Create one EC2 instance per table below.
----
+
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
@@ -129,17 +129,17 @@ sudo yum install -y amazon-efs-utils parallel tree git fpart
 sudo yum install -y --enablerepo=epel nload ioping
 git clone https://github.com/bengland2/smallfile.git
 ```
-- Run the following commands to mount the EFS file system and change ownership of the mount point (add a file system id of the file system you created in VPC1 on each instance:
+- Run the following commands to mount the EFS file system on each instance and change ownership of the mount point (add a file system id of the file system you created in VPC1:
 
 ```sh
 sudo mkdir -p /mnt/efs
 sudo mount -t efs <efs-file-system-id> /mnt/efs
 sudo chown ec2-user:ec2-user /mnt/efs
 ```
-
+___
 ## Section 2
 ### Compare the network performance of different EC2 instance types accessing EFS
- ___
+___
 This section will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing EFS.
 
 ### 2.1.  SSH into one Amazon EC2 instance
@@ -159,8 +159,8 @@ nload -u M
 ```
 
 ### 2.3.  Close the SSH sessions to the t3.micro and m4.large instances
-#
-#
+
+
 ### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance initially appears to have better network performance when compared against an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
 
@@ -172,10 +172,10 @@ All EC2 instance types have different network performance characteristics so eac
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
-
+___
 ## Section 3
 ### Demonstrate how multi-threaded access improves throughput and IOPS
- ___
+___
 This section will demonstrate how increasing the number of threads accessing EFS will significantly improve performance.
 
 ### 3.1.  SSH into the c5.2xlarge EC2 instance
@@ -229,11 +229,12 @@ time seq 1 1024 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_nam
 
 - How long did it take?
 - How does this compare to the first test above?
+- Why is this faster?
 - What can you do to improve performance?
 
 ### 3.5.  Generate 1024 zero-byte files
 
-- Run this command the SSH session of the c5.2xlarge to see how long it will take to create 1024 zero-byte files on an EFS file system using touch.
+- Run this command on the c5.2xlarge to see how long it will take to create 1024 zero-byte files on an EFS file system using touch.
 
 ```sh
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
@@ -244,58 +245,84 @@ time seq 1 32 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_name}
 ```
 
 - How long did it take?
-- Why is this so much faster when compared to all the tests above?
+- Why is this so much faster than all the tests above? Is still generated the same number of files on the same file system.
 
-### 3.6.  Write to EBS using 4 threads and sync after each block
+### 3.6.  Generate data using dd
 
-- Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
-
-```sh
-time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
-```
-
-Record run time.
-
-### 3.7.  Write to EFS using 4 threads and sync after each block
-
-- Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will generate data using a 1 MB block size and syncing data and metadata at the end of writing the entire 2 GB file.
 
 ```sh
-time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
+time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress conv=fsync
 ```
 
-Record run time.
+- How long did it take?
+- What was the average throughput?
+- How can we change this command to write more like a typical application (more frequent syncs)?
 
-### 3.4.  Write to EBS using 16 threads and sync after each block
-Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+### 3.7.  Generate data using dd
+
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will generate data using a 1 MB block size and syncing data and metadata at the end of each 1 MB block.
+
 ```sh
-time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
+time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
 ```
-Record run time.
-### 3.5.  Write to EFS using 16 threads and sync after each block
-Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
+
+- How long did it take?
+- What was the average throughput?
+- How can we change this command to write more like a typical application (more frequent syncs)?
+
+### 3.8.  Generate data using dd
+
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will generate data using a 16 MB block size and syncing data and metadata at the end of each 16 MB block.
+
 ```sh
-time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
+time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
 ```
-Record run time.
-#
-#
-### Results
-The distributed data storage design of EFS means that multi-threaded applications can drive substantial levels of aggregate throughput and IOPS. If you parallelize your writes to EFS by increasing the number of threads, you can increase the overall throughput and IOPS to EFS.
 
-| Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- | ---
-| 3.2 | Create | 2 GB | 1 MB | 4 | After each block | EBS | 16.6 seconds | 131 MB/s |
-| 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s* |
-| 3.4 | Create | 2 GB | 1 MB | 16 | After each block | EBS | 16.4 seconds | 131 MB/s |
-| 3.5 | Create | 2 GB | 1 MB | 16 | After each block | EFS | 7.9 seconds | 271 MB/s* |
+- How long did it take?
+- What was the average throughput?
+- Why is this faster?
 
-*this was achieved using a file system with a permitted throughput greater than 200 MB/s
+### 3.9.  Generate data using dd
 
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 1 MB block size syncing data and metadata at the end of each 1 MB block.
 
+```sh
+time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
+```
+
+- How long did it take?
+- What was the average throughput?
+- Why is this faster?
+
+### 3.10.  Generate data using dd
+
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 16 MB block size syncing data and metadata at the end of each 16 MB block.
+
+```sh
+time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=16M count=32 oflag=sync
+```
+
+- How long did it take?
+- What was the average throughput?
+- Why is this faster?
+
+### 3.11.  Generate data using dd
+
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 16 MB block size syncing data and metadata at the end of each 16 MB block.
+
+```sh
+time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+```
+
+- How long did it take?
+- What was the average throughput?
+- Why is this faster?
+
+___
 ## Section 4
 ### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
- ___
+___
 This section will compare how different I/O sizes (block sizes) and sync frequencies (the rate data is persisted to disk) have a profound impact on performance between EBS and EFS.
 
 ### 2.1.  SSH into the c4.2xlarge EC2 instance
