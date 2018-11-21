@@ -543,7 +543,7 @@ sudo python ~/smallfile/smallfile_cli.py --operation create --threads ${threads}
 ## Next section
 ### Click on the link below to go to the next Amazon EFS workshop section
 
-| [**Accessible**](/workshop/4-accessible) |
+| [**Scale-out**](/workshop/4-scale-out) |
 | :---
 ---
 

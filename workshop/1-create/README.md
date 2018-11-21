@@ -93,7 +93,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 ## Next section
 ### Click on the link below to go to the next Amazon EFS workshop section
 
-| [**Create**](/workshop/2-monitor) |
+| [**Monitor**](/workshop/2-monitor) |
 | :---
 ---
 

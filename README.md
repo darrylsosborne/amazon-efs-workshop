@@ -95,7 +95,7 @@ Click on the link below to go to the **Scale-out** workshop.
 ### 6. Tear-down
 This section will remind you to delete all the AWS resources you created for this workshop.
 
-Click on the link below to go to the **Scale-out** workshop.
+Click on the link below to go to the **Tear-down** workshop.
 
 | [**Tear-down**](/workshop/6-tear-down) |
 | :---

@@ -290,7 +290,7 @@ time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(dat
 - Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 16 MB block size syncing data and metadata at the end of each 16 MB block.
 
 ```sh
-time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=16M count=32 oflag=sync
+time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=16M count=32 oflag=sync
 ```
 
 - How long did it take?
@@ -302,7 +302,7 @@ time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/01/tutorial
 - Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 16 MB block size syncing data and metadata at the end of each 16 MB block.
 
 ```sh
-time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
 ```
 
 - How long did it take?
