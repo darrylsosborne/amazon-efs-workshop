@@ -308,16 +308,7 @@ The distributed data storage design of Amazon EFS enables high levels of availab
 
 This AWS CloudFormation stack will automatically create the environment created in Steps 1 - 3 above. Steps 4 - 5 are also scripted out below and you can run those in a terminal session. You will still need to complete Step 6 to delete the environment when you're finished with the tutorial.
 
-Click the  ![cloudformation-launch-stack](/images/deploy_to_aws.png) link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
-
-| AWS Region Code | Name | Launch |
-| --- | --- | --- 
-| us-east-1 |US East (N. Virginia)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| us-east-2 |US East (Ohio)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| us-west-2 |US West (Oregon)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| eu-west-1 |EU (Ireland)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| eu-central-1 |EU (Frankfurt)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
-| ap-southeast-2 |AP (Sydney)| [![cloudformation-launch-stack](/images/deploy_to_aws.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=efs-scale-out-tutorial&templateURL=https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-scale-out-tutorial-cfn-template-20171110c.yml) |
+Click the link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
 
 
 | AWS Region Code | Region Name |
