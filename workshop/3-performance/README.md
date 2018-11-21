@@ -320,218 +320,128 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutori
 - Why is this faster?
 
 ___
-## Section 4
-### Demonstrate how different I/O sizes and sync frequencies affects throughput to EFS
-___
-This section will compare how different I/O sizes (block sizes) and sync frequencies (the rate data is persisted to disk) have a profound impact on performance between EBS and EFS.
-
-### 2.1.  SSH into the c4.2xlarge EC2 instance
-### 2.2.  Write to EBS using 1 MB block size and sync once after each file
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-```sh
-time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress conv=fsync
-```
-Record run time.
-### 2.3.  Write to EFS using 1 MB block size and sync once after each file
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress conv=fsync
-```
-Record run time.
-### 2.4.  Write to EBS using 16 MB block size and sync once after each file
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-```sh
-time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress conv=fsync
-```
-Record run time.
-### 2.5.  Write to EFS using 16 MB block size and sync once after each file
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress conv=fsync
-```
-Record run time.
-### 2.6.  Write to EBS using 1 MB block size and sync after each block
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
-```sh
-time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress oflag=sync
-```
-Record run time.
-### 2.7.  Write to EFS using 1 MB block size and sync after each block
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
-```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=2048 status=progress oflag=sync
-```
-Record run time.
-### 2.8.  Write to EBS using 16 MB block size and sync after each block
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EBS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
-```sh
-time dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress oflag=sync
-```
-Record run time.
-### 2.9.  Write to EFS using 16 MB block size and sync after each block
-Run this command against the c4.2xlarge instance and use dd to create a 2 GB file on EFS using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
-```sh
-time dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=16M count=128 status=progress oflag=sync
-```
-Record run time.
-#
-#
-### Results
-All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance appears to have better network performance when initially compared to an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
-
-| Step | EC2 Instance Type | Operation | Data Size | Block Size | Sync | Storage | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2.2 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
-| 2.3 | c4.2xlarge | Create | 2 GB | 1 MB | After each file | EFS | 10.7 seconds | 201 MB/s* |
-| 2.4 | c4.2xlarge | Create | 2 GB | 16 MB | After each file | EBS | 17.0 seconds | 126 MB/s |
-| 2.5 | c4.2xlarge | Create | 2 GB | 16 MB | After each file | EFS | 10.6 seconds | 202 MB/s* |
-| 2.6 | c4.2xlarge | Create | 2 GB | 1 MB | After each block | EBS | 17.3 seconds | 124 MB/s |
-| 2.7 | c4.2xlarge | Create | 2 GB | 1 MB | After each block | EFS | 85.5 seconds | 25 MB/s* |
-| 2.8 | c4.2xlarge | Create | 2 GB | 16 MB | After each block | EBS | 16.3 seconds | 132 MB/s |
-| 2.9 | c4.2xlarge | Create | 2 GB| 16 MB | After each block | EFS | 23 seconds | 93 MB/s* |
-
-*this was achieved using a file system with a permitted throughput greater than 200 MB/s
-
-## Section 3
-### Demonstrate how multi-threaded access improves throughput and IOPS
- ___
-This section will demonstrate how increasing the number of threads accessing EFS will significantly improve performance when compared to EBS.
-
-### 3.1.  SSH into the c4.2xlarge EC2 instance
-### 3.2.  Write to EBS using 4 threads and sync after each block
-Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
-```sh
-time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
-```
-Record run time.
-### 3.3.  Write to EFS using 4 threads and sync after each block
-Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
-```sh
-time seq 0 3 | parallel --will-cite -j 4 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=512 oflag=sync'
-```
-Record run time.
-### 3.4.  Write to EBS using 16 threads and sync after each block
-Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EBS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
-```sh
-time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/ebs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
-```
-Record run time.
-### 3.5.  Write to EFS using 16 threads and sync after each block
-Run this command against the c4.2xlarge instance which will use dd to write 2 GB of data to EFS using a 1 MB block size and issuing a sync after each block to ensure everything is written to disk.
-```sh
-time seq 0 15 | parallel --will-cite -j 16 'dd if=/dev/zero of=/efs/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{}.img bs=1M count=128 oflag=sync'
-```
-Record run time.
-#
-#
-### Results
-The distributed data storage design of EFS means that multi-threaded applications can drive substantial levels of aggregate throughput and IOPS. If you parallelize your writes to EFS by increasing the number of threads, you can increase the overall throughput and IOPS to EFS.
-
-| Step | Operation | Data Size | Block Size | Threads | Sync | Storage | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | --- | ---
-| 3.2 | Create | 2 GB | 1 MB | 4 | After each block | EBS | 16.6 seconds | 131 MB/s |
-| 3.3 | Create | 2 GB | 1 MB | 4 | After each block | EFS | 21.7 seconds | 99 MB/s* |
-| 3.4 | Create | 2 GB | 1 MB | 16 | After each block | EBS | 16.4 seconds | 131 MB/s |
-| 3.5 | Create | 2 GB | 1 MB | 16 | After each block | EFS | 7.9 seconds | 271 MB/s* |
-
-*this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
 ## Section 4
 ### Compare different file transfer tools
- ___
+
 This section will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
 
-### 4.1.  SSH into the c4.2xlarge EC2 instance
-### 4.2.  Review the data to transfer
-Run this command against the c4.2xlarge instance to view the total size and count of files to be trasnferred.
+### 4.1.  SSH into the c5.2xlarge EC2 instance
+### 4.2.  Generate 5 GiB of data on the EBS volume
+- Run this command on the c5.2xlarge to generate 5 GB of data on the EBS volume. Files will vary in size from a few KiB to few MiB, but the average size will be ~1 MiB.
 ```sh
-du -csh /ebs/tutorial/data-1m/
-find /ebs/tutorial/data-1m/. -type f | wc -l
+sudo mkdir -p /ebs/workshop/data-1m
+sudo mkdir -p /ebs/workshop/smallfile
+sudo chown ec2-user:ec2-user /ebs/ -R
+python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir N --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --top /ebs/workshop/smallfile
+cp -R /ebs/workshop/smallfile/file_srcdir /ebs/workshop/data-1m/
 ```
-### 4.3.  Set the $instanceid variable
-Run this command against the c4.2xlarge instance to set the $instanceid variable which will be used in the preceeding steps.
+### 4.3.  Verify all files generated above have been created.
+- Run this command on the c5.2xlarge to verify 5000 files have been created and they total ~4.9-5.0 GiB.
 ```sh
-instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+du -csh /ebs/workshop/data-1m/
+find /ebs/workshop/data-1m/. -type f | wc -l
 ```
-### 4.4.  Transfer files from EBS to EFS using ***rsync***
-Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using rsync.
+### 4.3.  Transfer files from EBS to EFS using ***rsync***
+Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using rsync.
 ```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+mkdir -p /mnt/efs/${job_name}/rsync
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time rsync -r /ebs/tutorial/data-1m/ /efs/tutorial/rsync/${instanceid} &
+time rsync -r /ebs/workshop/data-1m/ /mnt/efs/${job_name}/rsync &
 nload -u M
 ```
-### 4.5.  Transfer files from EBS to EFS using ***cp***
-Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp.
+- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- What was the throughput?
+- How long did it take to complete?
+- Why did it take so long?
+
+### 4.4.  Transfer files from EBS to EFS using ***cp***
+Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp.
 ```sh
+mkdir -p /mnt/efs/${job_name}/cp
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time cp -r /ebs/tutorial/data-1m/* /efs/tutorial/cp/${instanceid} &
+time cp -r /ebs/workshop/data-1m/* /mnt/efs/${job_name}/cp &
 nload -u M
 ```
-### 4.6.  Set the $threads variable
-Run this command against the c4.2xlarge instance to set the $threads variable to 4 threads per vcpu. This variable will be used in the subsequent steps.
+- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- What was the throughput?
+- How long did it take to complete?
+- Why was this faster than the previous command?
+
+### 4.5.  Set the $threads variable
+Run this command against the c5.2xlarge instance to set the $threads variable to 4 threads per vcpu. This variable will be used in the subsequent steps.
 ```sh
-threads=$(($(nproc --all) * 4))
+threads=$(($(nproc --all) * 8))
 ```
-### 4.7.  Transfer files from EBS to EFS using ***fpsync***
+### 4.6.  Transfer files from EBS to EFS using ***fpsync***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpsync.
 ```sh
+mkdir -p /mnt/efs/${job_name}/fpsync
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time /usr/local/bin/fpsync -n ${threads} -v /ebs/tutorial/data-1m/ /efs/tutorial/fpsync/${instanceid} &
+time /usr/local/bin/fpsync -n ${threads} -v /ebs/workshop/data-1m/ /mnt/efs/${job_name}/fpsync &
 nload -u M
 ```
-### 4.8.  Transfer files from EBS to EFS using ***mcp***
-Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using mcp.
-```sh
-sudo su
-sync && echo 3 > /proc/sys/vm/drop_caches
-exit
-time mcp -r --threads=${threads} /ebs/tutorial/data-1m/* /efs/tutorial/mcp/${instanceid} &
-nload -u M
-```
-### 4.9.  Transfer files from EBS to EFS using ***cp + GNU Parallel***
+- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- What was the throughput?
+- How long did it take to complete?
+- Why was this faster than the previous command?
+
+### 4.7.  Transfer files from EBS to EFS using ***cp + GNU Parallel***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp + GNU Parallel.
 ```sh
+mkdir -p /mnt/efs/${job_name}/parallelcp
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time find /ebs/tutorial/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /efs/tutorial/parallelcp &
+time find /ebs/workshop/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /mnt/efs/${job_name}/parallelcp &
 nload -u M
 ```
-### 4.10.  Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
+- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- What was the throughput?
+- How long did it take to complete?
+- Why was this faster than the previous command?
+
+### 4.8.  Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
 Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpart + cpio + GNU Parallel.
 ```sh
+mkdir -p /mnt/efs/${job_name}/parallelcpio
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time /usr/local/bin/fpart -Z -n 1 -o /home/ec2-user/fpart-files-to-transfer /ebs/tutorial/data-1m
+cd /ebs/workshop/smallfile
+time /usr/local/bin/fpart -n 1 -o /home/ec2-user/fpart-files-to-transfer .
 head /home/ec2-user/fpart-files-to-transfer.0
-time parallel --will-cite -j ${threads} --pipepart --round-robin --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 'sudo cpio -pdm {} /efs/tutorial/parallelcpio/${instanceid}/' &
+time parallel --will-cite -j ${threads} --pipepart --round-robin --delay .1 --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 sudo "cpio -dpmL /mnt/efs/${job_name}/parallelcpio" &
 nload -u M
 ```
+- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- What was the throughput?
+- How long did it take to complete?
+- Why was this faster than the previous command?
+
 #
 #
 ### Results
-Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, mcp, and GNU parallel can drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
+Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, and GNU parallel can drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
 
+___
 
-| Step | File Transfer Tool | File Count | File Size | Total Size | Threads | Duration | Throughput |
-| --- | --- | --- | --- | --- | --- | --- | ---
-| 4.4 | rsync | 5000 | 1 MB | 5 GB | 1 | 435 seconds | 11.7 MB/s* |
-| 4.5 | cp | 5000 | 1 MB | 5 GB | 1 | 329 seconds | 15.6 MB/s* |
-| 4.7 | fpsync | 5000 | 1 MB | 5 GB | 32 | 210 seconds | 24.4 MB/s* |
-| 4.8 | mcp | 5000 | 1 MB | 5 GB | 32 | 87 seconds | 58.9 MB/s* |
-| 4.9 | cp + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 73 seconds | 70.1 MB/s* |
-| 4.10 | fpart + cpio + GNU Parallel | 5000 | 1 MB | 5 GB | 32 | 55 seconds | 93 MB/s* |
+## Section 5
+### Provisioned Throughput mode
 
-*this was achieved using a file system with a permitted throughput greater than 200 MB/s
+The throughput mode of the file system helps determine the overall throughput a file system is able to achieve. You can select the throughput mode at any time (subject to daily limits). Changing the throughput mode is a non-disruptive operation and can be run while clients continuously access the file system.  You can choose between two throughput modes, Bursting or Provisioned.
 
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-tools-results.png)
+Provisioned Throughput is available for applications that require a higher throughput to storage ratio than those allowed by Bursting Throughput mode. In this mode you can provision the file system’s throughput independent of the amount of data stored in the file system. This allows you to optimize your file system’s throughput performance to match your application’s needs, and your application can drive up to the provisioned throughput continuously. 
+This concept of provisioned performance is similar to features offered by other AWS services like provisioned IOPS for Amazon Elastic Block Store PIOPS (io1) volumes and provisioned throughput with read and write capacity units for Amazon DynamoDB. As with these services, you are billed separately for the performance or throughput you provision and the storage you use, e.g. two billing dimensions. When file systems are running in Provisioned Throughput mode, you are billed for the storage you use in GB-Month and for the throughput provisioned in MB/s-Month. The storage charge, for both Bursting and Provisioned Throughput modes includes the baseline throughput of the file system in the price of storage. This means the price of storage includes 1 MiB/s of throughput per 20 GiB of data stored so you will be billed for the throughput you provision above this limit. 
+
+You can increase Provisioned Throughput as often as you need.  You can decrease Provisioned Throughput or switch throughput modes as long as it’s been more than 24 hours since the last decrease or throughput mode change.  
 
 ## Section 5
 ### Cleanup
