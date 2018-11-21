@@ -149,3 +149,7 @@ After launching the AWS CloudFormation Stack above, you should see a new dashboa
 ---
 
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
+
+## License
+
+This library is licensed under the Amazon Software License.

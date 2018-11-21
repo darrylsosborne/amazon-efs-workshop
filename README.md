@@ -96,9 +96,7 @@ Click on the link below to go to the **Scale-out** workshop.
 
 ## Troubleshooting
 
-
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
-
 
 ## License
 

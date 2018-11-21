@@ -21,18 +21,7 @@ Errors or corrections? Email us at [darrylo@amazon.com](mailto:darrylo@amazon.co
 
 This workshop is designed to help you better understand the performance characteristics of Amazon Elastic File System (Amazon EFS) and how parallelism, I/O size, and Amazon EC2 instance types have a profound effect on file system performance.
 
-This tutorial is divided into five sections.
-
-- **Section 1 -** launch 3 Amazon EC2 instances all different instance types. Install EFS-utils, and other utilities, and generate sample data.
-
-- **Section 2 -** will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing an EFS file system.
-
-- **Section 3 -** will demonstrate how increasing the number of threads accessing EFS will significantly improve performance.
-
-- **Section 4 -** will demonstrate how different I/O sizes (block sizes) and sync() frequencies (the rate data is persisted to disk) have a profound impact on EFS performance when compared to EBS.
-
-- **Section 5 -** will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
-
+This tutorial is divided into 6 sections.
 
 ### Prerequisites
 
@@ -43,8 +32,6 @@ This tutorial is divided into five sections.
 ### The Environment
 
 You will install a number of utilities to test different characteristics and EFS.
-
-- **ioping -** is a console application to generate a read/write workload against a mount
 
 - **nload -** is a console application that monitors network traffic and bandwidth usage in real time
 
@@ -63,9 +50,10 @@ NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. T
 WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of launching this CloudFormation stack and executing the scripts included in this tutorial. This tutorial will take approximately 1 hour to complete and at a cost of ~$0.83. Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don’t continue to incur additional compute and storage charges.
 
 
+---
 ## Section 1
 ### Launch three Amazon EC2 instances and install applications
----
+
 
 - Click on the link below to log in to the Amazon EC2 Management Console in the same AWS region where you created your VPCs and EFS file systems. 
 
@@ -126,7 +114,7 @@ WARNING!! This tutorial environment will exceed your free-usage tier. You will i
 ```sh
 sudo yum update -y
 sudo yum install -y amazon-efs-utils parallel tree git fpart
-sudo yum install -y --enablerepo=epel nload ioping
+sudo yum install -y --enablerepo=epel nload
 git clone https://github.com/bengland2/smallfile.git
 ```
 - Run the following commands to mount the EFS file system on each instance and change ownership of the mount point (add a file system id of the file system you created in VPC1:
@@ -136,10 +124,11 @@ sudo mkdir -p /mnt/efs
 sudo mount -t efs <efs-file-system-id> /mnt/efs
 sudo chown ec2-user:ec2-user /mnt/efs
 ```
-___
+
+---
 ## Section 2
 ### Compare the network performance of different EC2 instance types accessing EFS
-___
+
 This section will demonstrate that not all Amazon EC2 instance types are created equal and different instance types provide different levels of network performance when accessing EFS.
 
 ### 2.1.  SSH into one Amazon EC2 instance
@@ -172,10 +161,11 @@ All EC2 instance types have different network performance characteristics so eac
 
 *this was achieved using a file system with a permitted throughput greater than 200 MB/s
 
+
 ___
 ## Section 3
 ### Demonstrate how multi-threaded access improves throughput and IOPS
-___
+
 This section will demonstrate how increasing the number of threads accessing EFS will significantly improve performance.
 
 ### 3.1.  SSH into the c5.2xlarge EC2 instance
@@ -320,7 +310,6 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutori
 - Why is this faster?
 
 ___
-
 ## Section 4
 ### Compare different file transfer tools
 
@@ -432,7 +421,6 @@ nload -u M
 Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, and GNU parallel can drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
 
 ___
-
 ## Section 5
 ### Provisioned Throughput mode
 
@@ -443,35 +431,88 @@ This concept of provisioned performance is similar to features offered by other 
 
 You can increase Provisioned Throughput as often as you need.  You can decrease Provisioned Throughput or switch throughput modes as long as it’s been more than 24 hours since the last decrease or throughput mode change.  
 
-## Section 5
-### Cleanup
-Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don't continue to incur additional charges for these resources.
-### 5.1.  Delete all files on the EFS file system created during the tutorial
-Run this command on the c4.2xlarge instance to delete the /efs/tutorial data.
+
+### 5.1.  Change from Bursting to Provisioned Throughput mode
+
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 16 MB block size syncing data and metadata at the end of each 16 MB block.
+
 ```sh
-sudo rm /efs/tutorial/ -r 
+time seq 1 32 | parallel --will-cite -j 32 dd if=/dev/zero of=/mnt/efs/16G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=4M count=128 oflag=sync &
+nload -u M
 ```
-### 5.2.  Delete the AWS CloudFormation stack you launched during the tutorial
-![](https://s3.amazonaws.com/aws-us-east-1/tutorial/efs-performance-tutorial-delete-cf-stack-screenshot.png)
 
-
-## Conclusion
-The distributed data storage design of Amazon EFS enables high levels of availability, durability, and scalability. This distributed architecture results in a small latency overhead for each file operation. Due to this per-operation latency, overall throughput generally increases as the average I/O size increases, because the overhead is amortized over a larger amount of data. Amazon EFS supports highly parallelized workloads (for example, using concurrent operations from multiple threads and multiple Amazon EC2 instances), which enables high levels of aggregate throughput and operations per second.
-
----
-## Next tutorial
-### Click on the link below to go to the next Amazon EFS tutorial
-
-| Tutorial | Link
-| --- | ---
-| **Scale-out** | [![](/images/efs_tutorial.png)](/tutorial/scale-out) |
+- While the command is running, switch back to the Amazon EFS Management Console.
+- Select the EFS file system you have mounted.
+- Click **Actions** > **Manage throughput modes**
+- Select **Provisioned** and set the provisioned throughput to 150 MiB/s.
+- Click **Save** then quickly switch back to the SSH window show the nload results of your dd command above.
+- What happens to the throughput when the file system switches to provisioned throughput?
+- What happens if you increase the throughput to 238 MiB/s?
+- How long does it take to generate 16 GiB of data?
 
 ---
+## Section 6
+### Compare mounting a file system using NFSv4.0 vs NFSv4.1 clients
 
+### 6.1.  Generate 1024 files using NFSv4.1 client
 
-## Troubleshooting
+- Run this command on the c5.2xlarge to see how long it will take to create 1024 files using smallfile.
+
+```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+sudo mkdir -p /mnt/efs/${job_name}
+threads=32
+file_size=1
+file_count=32
+sudo python ~/smallfile/smallfile_cli.py --operation create --threads ${threads} --file-size ${file_size} --files ${file_count} --same-dir N --dirs-per-dir ${file_count} --hash-into-dirs Y --files-per-dir ${file_count} --prefix $(echo $(uuidgen)| grep -o ".\{6\}$") --top /mnt/efs/${job_name}
+```
+- How long did it take to complete?
+
+### 6.2.  Generate 1024 files using NFSv4.0 client
+
+- Run this command on the c5.2xlarge to umount the file system and remount using NFSv4.0 client.
+
+```sh
+sudo mount /mnt/efs
+sudo mount -t efs <efs-file-system-id> -o vers=nfsv4.0 /mnt/efs
+```
+- Run this command on the c5.2xlarge to see how long it will take to create 1024 files using smallfile.
+
+```sh
+job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
+sudo mkdir -p /mnt/efs/${job_name}
+threads=32
+file_size=1
+file_count=32
+sudo python ~/smallfile/smallfile_cli.py --operation create --threads ${threads} --file-size ${file_size} --files ${file_count} --same-dir N --dirs-per-dir ${file_count} --hash-into-dirs Y --files-per-dir ${file_count} --prefix $(echo $(uuidgen)| grep -o ".\{6\}$") --top /mnt/efs/${job_name}
+```
+- How long did it take to complete?
+- Why is there a difference between mounting it using NFSv4.0 vs. NFSv4.1?
+
+---
+## Section 7
+### EFS best practices
+
+- Test with General Purpose performance mode
+- Start with Bursting throughput mode
+- Mount on clients running Linux kernel 4+ (RHEL 3.10+)
+- Mount using EFS mount helper (NFSv4.1 client)
+- Use large IO size (aggregate your IO)
+- Access the file system in parallel using multiple threads
+- Access the file system in parallel using multiple instances
+- For heavy write workloads, write in mulitple directories in parallel
+- Monitor metrics
+
+---
+## Next section
+### Click on the link below to go to the next Amazon EFS workshop section
+
+| [**Accessible**](/workshop/4-accessible) |
+| :---
+---
+
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
-
 ## License
+
 This library is licensed under the Amazon Software License.
