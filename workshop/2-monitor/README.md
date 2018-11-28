@@ -26,13 +26,15 @@ This workshop is designed to help you better understand how to use Amazon CloudW
 * An AWS account
 * An Amazon EFS file system
 
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+
 ### Amazon CloudWatch Metric Math & Dashboards
 
-The best way to understand the workload your file system serves is by monitoring the metrics Amazon CloudWatch collects and processes. By monitoring the EFS CloudWatch metrics TotalIOBytes, DataWriteIOBytes, DataReadIOBytes, and MetaDataIOBytes in the CloudWatch console, you can see in near real-time your file system performance. These metrics are sent to CloudWatch at 1-minute intervals and are available for the next 15 months, so you can access historical information about the workload that has run on your file system over time.
+The easy way to understand how hard your workload is driving the file system is by monitoring the metrics Amazon CloudWatch collects and processes. By monitoring the EFS CloudWatch metrics TotalIOBytes, DataWriteIOBytes, DataReadIOBytes, and MetaDataIOBytes in the CloudWatch console, you can see, in near real-time, your file system's performance. These metrics are sent to CloudWatch at 1-minute intervals and are available for the next 15 months, so you can access historical information about the workload that has run on your file system over time.
 
-Metric Math, a feature within Amazon CloudWatch, makes it easy to perform math analytics on your metrics to derive additional insights into the health and performance of your AWS resources and applications. In this case your Amazon EFS file system. 
+Metric Math, a feature within Amazon CloudWatch, makes it easy to perform math analytics on your metrics to derive additional insights into the health and performance of your AWS resources and applications. 
 
-Amazon CloudWatch dashboards are customizable home pages in the CloudWatch console that you can use to monitor your resources in a single view. You can use CloudWatch dashboards to create customized views of the metrics and alarms for your AWS resources. You can have up to 500 dashboards in your AWS account. All dashboards are global, not region-specific.
+Amazon CloudWatch dashboards are customizable home pages in the CloudWatch console that you can use to monitor resources in a single view. You can use CloudWatch dashboards to create customized views of the metrics and alarms for your AWS resources. You can have up to 500 dashboards in your AWS account. All dashboards are global, not region-specific.
 
 ![](/images/cw_dashboard_mm_efs_03.png)
 
