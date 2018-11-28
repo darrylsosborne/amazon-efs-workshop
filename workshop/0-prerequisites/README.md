@@ -28,11 +28,11 @@ This section is designed to create two Amazon VPCs for subsequent workshop secti
 
 If a key pair has not been previously created in your account, please refer to [Creating a Key Pair Using Amazon EC2](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) from the AWS EC2 User's Guide.  
 
-Verify that the key pair is created in the same AWS region you will use for the tutorial.
+Verify that the key pair is created in the same AWS region you will use for the workshop.
 
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
-### Create Amazon Virtual Private Clouds (Amazon VPC)
+### Create Amazon Virtual Private Clouds (Amazon VPCs)
 
 Click on the link below in the desired AWS region to create the AWS Cloudformation stack that will create two Amazon VPCs in your AWS account. These VPCs will host Amazon EFS file systems and the other AWS resources created in this workshop. Use the following parameters and the screenshot below as a guide to enter the appropriate AWS CloudFormation parameter values.
 
