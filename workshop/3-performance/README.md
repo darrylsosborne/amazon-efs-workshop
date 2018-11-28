@@ -25,9 +25,11 @@ This tutorial is divided into 6 sections.
 
 ### Prerequisites
 
-* An AWS account
+* An AWS account with administrative level access
 * An Amazon EFS file system
 * An Amazon EC2 key pair
+
+WARNING!! This workshop environment will exceed your free-usage tier. You will incur charges as a result of building this environment and executing the scripts included in this workshop. Delete all AWS resources created during this workshop so you don’t continue to incur additional compute and storage charges.
 
 ### The Environment
 
@@ -39,15 +41,11 @@ You will install a number of utilities to test different characteristics and EFS
 
 - **GNU Parallel -** [https://www.gnu.org/software/parallel/](https://www.gnu.org/software/parallel/) - used to parallelize single-threaded commands; O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47
 
-- **Mutil *mcp -*** [https://github.com/pkolano/mutil](https://github.com/pkolano/mutil) - multi-threaded drop-in replacement of cp; Author Paul Kolano (NASA)
-
 - **fpart -** [https://github.com/martymac/fpart](https://github.com/martymac/fpart) - sorts file trees and packs them into partitions; Author Ganaël Laplanche
 
 - **fpsync -** wraps fpart + rsync together as a multi-threaded transfer utility - included in the tools/ directory of fpart
 
 NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. These software packages are used for demonstration purposes only.  Follow all expressed or implied license agreements associated with these 3rd party software products.
-
-WARNING!! This tutorial environment will exceed your free-usage tier. You will incur charges as a result of launching this CloudFormation stack and executing the scripts included in this tutorial. This tutorial will take approximately 1 hour to complete and at a cost of ~$0.83. Delete all files on the EFS file system that were created during this tutorial and delete the CloudFormation stack so you don’t continue to incur additional compute and storage charges.
 
 
 ---
