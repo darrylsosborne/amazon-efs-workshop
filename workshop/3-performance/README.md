@@ -128,7 +128,7 @@ sudo yum install -y --enablerepo=epel nload
 git clone https://github.com/bengland2/smallfile.git
 
 ```
-- Run the following commands to mount the EFS file system on each instance and change ownership of the mount point (add a file system id of the file system you created in VPC1:
+- Run the following commands to mount the EFS file system on each instance and change permission of the mount point (add a file system id of the file system you created in VPC1:
 
 ```sh
 sudo mkdir -p /mnt/efs
