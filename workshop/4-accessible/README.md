@@ -207,7 +207,8 @@ time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=204
 - How does this compare to the test with the file system in VPC1?
 
 ```sh
-time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutorial/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+
 ```
 
 - How long did it take?
@@ -219,7 +220,7 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/01/tutori
 ## Next section
 ### Click on the link below to go to the next Amazon EFS workshop section
 
-| [**Scale-out**](/workshop/4-scale-out) |
+| [**Scale-out**](/workshop/5-scale-out) |
 | :---
 ---
 
