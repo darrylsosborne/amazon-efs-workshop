@@ -125,7 +125,7 @@ For more information about Amazon CloudWatch, please refer to https://docs.aws.a
 
 ### Launch the AWS CloudFormation Stack
 
-Click the link below to create the AWS CloudFormation stack in the same region as your VPCs and EFS file systems. It creates an Amazon CloudWatch dashboard with widgets displaying file system performance metrics (throughput, IOPS, etc.) using metric math expressions. The metric math expressions described above are included in this [template](/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml).
+Click the link below to create the AWS CloudFormation stack in the same region as your VPCs and EFS file systems. It creates an Amazon CloudWatch dashboard with widgets displaying file system performance metrics (throughput, IOPS, etc.) using metric math expressions. The metric math expressions described above are included in this [template](/monitoring/templates/cw_dashboard_with_mm_for_efs.yaml). You will be creating a dashboard per file system. Each CloudFormation stack must have a unique name. Get the file system ids from the EFS console. Use the file system id as the name of the CloudFormation stack. Accept all the default CloudFormation settings and create the Stack.
 
 | AWS Region Code | Region Name |
 | :--- | :--- 
@@ -141,6 +141,8 @@ Click the link below to create the AWS CloudFormation stack in the same region a
 | eu-west-1 | [EU West (Ireland)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=&templateURL=https://s3.amazonaws.com/aws-us-east-1/amazon-efs-workshop/templates/cw_dashboard_efs_201811120.yaml) |
 
 After launching the AWS CloudFormation Stack above, you should see a new dashboard in your Amazon CloudWatch console using the naming convention ***aws-region***_***efs-filesystem-id***.
+
+Repeat the step above and create a CloudWatch dashboard for the other file system you created.
 
 ---
 ## Next section

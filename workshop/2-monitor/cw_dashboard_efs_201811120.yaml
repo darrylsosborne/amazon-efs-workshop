@@ -24,7 +24,7 @@ Metadata:
         - ElasticFileSystem
     ParameterLabels:
       ElasticFileSystem:
-        default: Amazon EFS File System
+        default: Amazon EFS File System Id
 
 Parameters:
 
