@@ -68,18 +68,21 @@ NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. T
 | eu-central-1 | [EU Central (Frankfurt)](https://console.aws.amazon.com/ec2/v2/home?region=eu-central-1#LaunchInstanceWizard:) |
 | eu-west-1 | [EU West (Ireland)](https://console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LaunchInstanceWizard:) |
 
-- Launch an EC2 instance with the following configuration details. If a value isn't specified below, accept the default value. Create one EC2 instance per table below.
+
+### Step 1.2: Launch 3 Amazon Linux EC2 instances
+
+- Launch an EC2 instance with the following configuration details. If a value isn't specified, accept the default value. Create one EC2 instance per table below.
 
 | Configuration detail | Value |
 | :--- | :--- 
 | Amazon Machine Image (AMI) | Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type |
-| Instance Type | t3.micro |
+| Instance Type | t2.micro |
 | Number of instances | 1 |
 | Network | Select the VPC you created earlier, select a VPC with "... Vpc1..." in the name |
 | T2/T3 Unlimited | Not enabled (uncheck this checkbox) |
 | Root Volume Size (GiB) | 50 |
 | Tag | Key/Value = Name / EFS Workshop |
-| Security Group | default VPC security group |
+| Security Group | the existing default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
 ---
 | Configuration detail | Value |
@@ -90,7 +93,7 @@ NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. T
 | Network | Select the VPC you created earlier, select a VPC with "... Vpc1..." in the name |
 | Root Volume Size (GiB) | 50 |
 | Tag | Key/Value = Name / EFS Workshop |
-| Security Group | default VPC security group |
+| Security Group | the existing default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
 ---
 | Configuration detail | Value |
@@ -101,11 +104,20 @@ NOTICE!! Amazon Web Services does NOT endorse specific 3rd party applications. T
 | Network | Select the VPC you created earlier, select a VPC with "... Vpc1..." in the name |
 | Root Volume Size (GiB) | 50 |
 | Tag | Key/Value = Name / EFS Workshop |
-| Security Group | default VPC security group |
+| Security Group | the existing default VPC security group |
 | Key pair | Select an existing key pair that you have access to |
 ---
 
-- SSH to each instance above
+### Step 1.2: Log on to each Linux EC2 instance
+
+- From the Amazon EC2 Console, select the **EFSWorkshop** instance
+- Click **Connect**
+- Use the connection information to SSH to the instance using your laptop's terminal application
+- SSH to all three EC2 instances you created earlier
+
+### Step 1.3: Install linux applications
+
+> Complete the following steps in your SSH session connected to the each EC2 instance
 
 - Run the following commands to install applications on each instance:
 
@@ -114,13 +126,15 @@ sudo yum update -y
 sudo yum install -y amazon-efs-utils parallel tree git fpart
 sudo yum install -y --enablerepo=epel nload
 git clone https://github.com/bengland2/smallfile.git
+
 ```
 - Run the following commands to mount the EFS file system on each instance and change ownership of the mount point (add a file system id of the file system you created in VPC1:
 
 ```sh
 sudo mkdir -p /mnt/efs
 sudo mount -t efs <efs-file-system-id> /mnt/efs
-sudo chown ec2-user:ec2-user /mnt/efs
+sudo chmod 777 /mnt/efs
+
 ```
 
 ---
@@ -131,34 +145,26 @@ This section will demonstrate that not all Amazon EC2 instance types are created
 
 ### 2.1.  SSH into one Amazon EC2 instance
 
-- Start with the t3.micro instance
-- Run the command in 2.2. below and wait for it to complete.
+- Start with the t2.micro instance
+- Run the command in 2.2. below and wait for it to complete. Continue to watch the outgoing network metric.
 - What happened after ~15GB was written?
 - Disconnect from that instance and do the same thing for the m4.large instance then the c5.2xlarge instance
 - What's the difference between all three instances?
-- Can you explain the performance results between the t3.micro instance and the m5.large instance?
+- Can you explain the performance results between the t2.micro instance and the m4.large instance?
 
-### 2.2.  Use dd to write 20 GB of data to EFS from each instance
-Run this command against all three instances to create a 20 GiB file on EFS and monitor network traffic and throughput in real-time
+### 2.2.  Use dd to write 17 GB of data to EFS from each instance
+Run this command against all three instances to create a 17 GiB file on EFS and monitor network traffic and throughput in real-time
 ```sh
-time dd if=/dev/zero of=/mnt/efs/20G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=20480 conv=fsync &
+time dd if=/dev/zero of=/mnt/efs/17G-dd-$(date +%Y%m%d%H%M%S.%3N).img bs=1M count=17408 conv=fsync &
 nload -u M
+
 ```
 
-### 2.3.  Close the SSH sessions to the t3.micro and m4.large instances
+### 2.3.  Close the SSH sessions to the t2.micro and m4.large instances
 
 
 ### Results
 All EC2 instance types have different network performance characteristics so each can drive different levels of throughput to EFS. While the t2.micro instance initially appears to have better network performance when compared against an m4.large instance, it's high network throughput is short lived as a result of the burst characteristics on t2 instances.
-
-| Step | EC2 Instance Type | Data Size | Duration | Burst Throughput | Baseline Throughput | Average Throughput |
-| :--- | :--- | --- | --- | --- | --- | --- |
-| 1.3. | t3.micro | 20 GB | 720 seconds | 120 MB/s | 7 MB/s | 30 MB/s |
-| 1.3. | m4.large | 20 GB | 384 seconds | - | - | 56 MB/s |
-| 1.3. | c5.2xlarge | 20 GB | 143 seconds | - | - | 150 MB/s* |
-
-*this was achieved using a file system with a permitted throughput greater than 200 MB/s
-
 
 ___
 ## Section 3
@@ -180,6 +186,7 @@ sudo mkdir -p /mnt/efs/touch/${job_name}
 time for i in {1..1024}; do
   sudo touch /mnt/efs/touch/${job_name}/touch.$i;
   done;
+
 ```
 
 - How long did it take?
@@ -198,6 +205,7 @@ sudo mkdir -p /ebs/touch/${job_name}
 time for i in {1..1024}; do
   sudo touch /ebs/touch/${job_name}/touch.$i;
   done;
+
 ```
 
 - How long did it take?
@@ -213,6 +221,7 @@ job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 sudo mkdir -p /mnt/efs/touch/${job_name}
 
 time seq 1 1024 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_name}/touch.{};
+
 ```
 
 - How long did it take?
@@ -230,10 +239,11 @@ job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 sudo mkdir -p /mnt/efs/touch/${job_name}/{1..32}
 
 time seq 1 32 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_name}/{}/deleteme.{1..32};
+
 ```
 
 - How long did it take?
-- Why is this so much faster than all the tests above? Is still generated the same number of files on the same file system.
+- Why is this so much faster than all the tests above? It still generated the same number of files on the same file system.
 
 ### 3.6.  Generate data using dd
 
@@ -241,6 +251,7 @@ time seq 1 32 | sudo parallel --will-cite -j 32 touch /mnt/efs/touch/${job_name}
 
 ```sh
 time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress conv=fsync
+
 ```
 
 - How long did it take?
@@ -249,15 +260,16 @@ time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=204
 
 ### 3.7.  Generate data using dd
 
-- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will generate data using a 1 MB block size and syncing data and metadata at the end of each 1 MB block.
+- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will generate data using a 1 MB block size and syncing data and metadata at the end of each 1 MB block. Look at the last option **oflag=sync**.
 
 ```sh
 time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
+
 ```
 
 - How long did it take?
 - What was the average throughput?
-- How can we change this command to write more like a typical application (more frequent syncs)?
+- What can we do to improve performance?
 
 ### 3.8.  Generate data using dd
 
@@ -265,6 +277,7 @@ time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=204
 
 ```sh
 time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
+
 ```
 
 - How long did it take?
@@ -277,6 +290,7 @@ time dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=12
 
 ```sh
 time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
+
 ```
 
 - How long did it take?
@@ -289,6 +303,7 @@ time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(dat
 
 ```sh
 time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=16M count=32 oflag=sync
+
 ```
 
 - How long did it take?
@@ -301,11 +316,13 @@ time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/mnt/efs/2G-dd-$(dat
 
 ```sh
 time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/mnt/efs/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+
 ```
 
 - How long did it take?
 - What was the average throughput?
-- Why is this faster?
+- Should this be faster?
+- What could be preventing it from achieving higher throughput?
 
 ___
 ## Section 4
@@ -320,17 +337,19 @@ This section will compare and demonstrate how different file transfer tools affe
 sudo mkdir -p /ebs/workshop/data-1m
 sudo mkdir -p /ebs/workshop/smallfile
 sudo chown ec2-user:ec2-user /ebs/ -R
-python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir N --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --top /ebs/workshop/smallfile
+sudo python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 10 --file-size 1024 --file-size-distribution exponential --files 500 --same-dir N --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --top /ebs/workshop/smallfile
 cp -R /ebs/workshop/smallfile/file_srcdir /ebs/workshop/data-1m/
+
 ```
 ### 4.3.  Verify all files generated above have been created.
-- Run this command on the c5.2xlarge to verify 5000 files have been created and they total ~4.9-5.0 GiB.
+- Run this command on the c5.2xlarge to verify ~5000 files have been created and they total ~4.9-5.0 GiB. Its OK if not all 5000 files were created.
 ```sh
 du -csh /ebs/workshop/data-1m/
 find /ebs/workshop/data-1m/. -type f | wc -l
+
 ```
 ### 4.3.  Transfer files from EBS to EFS using ***rsync***
-Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using rsync.
+Run this command against the c5.2xlarge instance to drop caches and transfer the files created above (~1 MB each) totalling 5 GB from EBS to EFS using rsync.
 ```sh
 job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
 mkdir -p /mnt/efs/${job_name}/rsync
@@ -339,8 +358,9 @@ sync && echo 3 > /proc/sys/vm/drop_caches
 exit
 time rsync -r /ebs/workshop/data-1m/ /mnt/efs/${job_name}/rsync &
 nload -u M
+
 ```
-- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- Monitor throughput using nload for 2-3 minutes. Ctrl+Z to exist **nload**.
 - What was the throughput?
 - How long did it take to complete?
 - Why did it take so long?
@@ -354,34 +374,37 @@ sync && echo 3 > /proc/sys/vm/drop_caches
 exit
 time cp -r /ebs/workshop/data-1m/* /mnt/efs/${job_name}/cp &
 nload -u M
+
 ```
-- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- Monitor throughput using nload for 2-3 minutes. Ctrl+Z to exist **nload**.
 - What was the throughput?
 - How long did it take to complete?
 - Why was this faster than the previous command?
 
 ### 4.5.  Set the $threads variable
-Run this command against the c5.2xlarge instance to set the $threads variable to 4 threads per vcpu. This variable will be used in the subsequent steps.
+Run this command against the c5.2xlarge instance to set the $threads variable to 8 threads per vcpu. This variable will be used in the subsequent steps.
 ```sh
 threads=$(($(nproc --all) * 8))
+
 ```
 ### 4.6.  Transfer files from EBS to EFS using ***fpsync***
-Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpsync.
+Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpsync.
 ```sh
 mkdir -p /mnt/efs/${job_name}/fpsync
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
-time /usr/local/bin/fpsync -n ${threads} -v /ebs/workshop/data-1m/ /mnt/efs/${job_name}/fpsync &
+time fpsync -n ${threads} -v /ebs/workshop/data-1m/ /mnt/efs/${job_name}/fpsync &
 nload -u M
+
 ```
-- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- Monitor throughput using nload for 10-15 seconds. Ctrl+Z to exist **nload**.
 - What was the throughput?
 - How long did it take to complete?
 - Why was this faster than the previous command?
 
 ### 4.7.  Transfer files from EBS to EFS using ***cp + GNU Parallel***
-Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp + GNU Parallel.
+Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using cp + GNU Parallel.
 ```sh
 mkdir -p /mnt/efs/${job_name}/parallelcp
 sudo su
@@ -389,32 +412,35 @@ sync && echo 3 > /proc/sys/vm/drop_caches
 exit
 time find /ebs/workshop/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /mnt/efs/${job_name}/parallelcp &
 nload -u M
+
 ```
-- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- Monitor throughput using nload for 10-15 seconds. Ctrl+Z to exist **nload**.
 - What was the throughput?
 - How long did it take to complete?
 - Why was this faster than the previous command?
 
 ### 4.8.  Transfer files from EBS to EFS using ***fpart + cpio + GNU Parallel***
-Run this command against the c4.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpart + cpio + GNU Parallel.
+Run this command against the c5.2xlarge instance to drop caches and transfer 5,000 files (~1 MB each) totalling 5 GB from EBS to EFS using fpart + cpio + GNU Parallel.
 ```sh
 mkdir -p /mnt/efs/${job_name}/parallelcpio
 sudo su
 sync && echo 3 > /proc/sys/vm/drop_caches
 exit
 cd /ebs/workshop/smallfile
-time /usr/local/bin/fpart -n 1 -o /home/ec2-user/fpart-files-to-transfer .
-head /home/ec2-user/fpart-files-to-transfer.0
+time fpart -n 1 -o /home/ec2-user/fpart-files-to-transfer .
+head fpart-files-to-transfer.0
 time parallel --will-cite -j ${threads} --pipepart --round-robin --delay .1 --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 sudo "cpio -dpmL /mnt/efs/${job_name}/parallelcpio" &
+cd
 nload -u M
+
 ```
-- Monitor throughput using nload for 10-15 seconds. Control+z to exist **nload**.
+- Monitor throughput using nload for 10-15 seconds. Ctrl+Z to exist **nload**.
 - What was the throughput?
 - How long did it take to complete?
 - Why was this faster than the previous command?
 
 ### Results
-Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, and GNU parallel can drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
+Not all file transfer utilities are created equal. File systems are distributed across an unconstrained number of storage servers and this distributed data storage design means that multithreaded applications like fpsync, and GNU parallel can be used to drive substantial levels of throughput and IOPS to EFS when compared to single-threaded applications.
 
 ___
 ## Section 5
@@ -430,11 +456,12 @@ You can increase Provisioned Throughput as often as you need.  You can decrease 
 
 ### 5.1.  Change from Bursting to Provisioned Throughput mode
 
-- Run this command on the c5.2xlarge to see how long it will take to create 2 GB of data on an EFS file system using dd. This command will use 4 threads and generate data using a 16 MB block size syncing data and metadata at the end of each 16 MB block.
+- Run this command on the c5.2xlarge to see how long it will take to create 64 GB of data on an EFS file system using dd. This command will use 32 threads and generate data using a 4 MB block size syncing data and metadata at the end of each 4 MB block.
 
 ```sh
-time seq 1 32 | parallel --will-cite -j 32 dd if=/dev/zero of=/mnt/efs/16G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=4M count=128 oflag=sync &
+time seq 1 32 | parallel --will-cite -j 32 dd if=/dev/zero of=/mnt/efs/16G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=4M count=512 oflag=sync &
 nload -u M
+
 ```
 
 - While the command is running, switch back to the Amazon EFS Management Console.
@@ -444,11 +471,12 @@ nload -u M
 - Click **Save** then quickly switch back to the SSH window show the nload results of your dd command above.
 - What happens to the throughput when the file system switches to provisioned throughput?
 - What happens if you increase the throughput to 238 MiB/s?
-- How long does it take to generate 16 GiB of data?
+- How long does it take to generate 64 GiB of data?
+- Review the CloudWatch dashboard of your file system.
 
 ---
 ## Section 6
-### Compare mounting a file system using NFSv4.0 vs NFSv4.1 clients
+### Compare file system performance between NFSv4.0 and NFSv4.1 clients
 
 ### 6.1.  Generate 1024 files using NFSv4.1 client
 
@@ -461,6 +489,7 @@ threads=32
 file_size=1
 file_count=32
 sudo python ~/smallfile/smallfile_cli.py --operation create --threads ${threads} --file-size ${file_size} --files ${file_count} --same-dir N --dirs-per-dir ${file_count} --hash-into-dirs Y --files-per-dir ${file_count} --prefix $(echo $(uuidgen)| grep -o ".\{6\}$") --top /mnt/efs/${job_name}
+
 ```
 - How long did it take to complete?
 
@@ -469,8 +498,9 @@ sudo python ~/smallfile/smallfile_cli.py --operation create --threads ${threads}
 - Run this command on the c5.2xlarge to umount the file system and remount using NFSv4.0 client.
 
 ```sh
-sudo mount /mnt/efs
-sudo mount -t efs <efs-file-system-id> -o vers=nfsv4.0 /mnt/efs
+sudo umount /mnt/efs
+sudo mount -t efs <efs-file-system-id> -o nfsvers=4.0 /mnt/efs
+
 ```
 - Run this command on the c5.2xlarge to see how long it will take to create 1024 files using smallfile.
 
@@ -481,6 +511,7 @@ threads=32
 file_size=1
 file_count=32
 sudo python ~/smallfile/smallfile_cli.py --operation create --threads ${threads} --file-size ${file_size} --files ${file_count} --same-dir N --dirs-per-dir ${file_count} --hash-into-dirs Y --files-per-dir ${file_count} --prefix $(echo $(uuidgen)| grep -o ".\{6\}$") --top /mnt/efs/${job_name}
+
 ```
 - How long did it take to complete?
 - Why is there a difference between mounting it using NFSv4.0 vs. NFSv4.1?
