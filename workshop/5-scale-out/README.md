@@ -47,7 +47,9 @@ WARNING!! This workshop environment will exceed your free-usage tier. You will i
 This AWS CloudFormation stack will automatically create a fleet of EC2 spot instances that will download objecst from S3 in parallel.
 
 
-Click the link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this tutorial.
+Click the link below to create the AWS CloudFormation stack in your account and desired AWS region. This region must an existing Amazon EFS file system which you will use with this workshop.
+
+Use parameters so this workload runs in VPC1. Use the file system id of the file system in VPC1 and select the default VPC security group and two subnets in VPC1.
 
 
 | AWS Region Code | Region Name |
@@ -66,19 +68,23 @@ Click the link below to create the AWS CloudFormation stack in your account and 
 After launching the AWS CloudFormation Stack above, you should see the Amazon EC2 instances running in your VPC.  Wait for the **Name** tag of each instance to read "Scale-out Tutorial" before continuing.
 
 ## Verify all instances have registered with SSM
-Run this command to verify all EC2 instances in the spot fleet have registered with SSM. You should see one entry per instance.
+Run this command from your local laptop to verify all EC2 instances in the spot fleet have registered with SSM. You should see one entry per instance. Add the --region option if you created this environment in a region other than your CLI's default.
 ```sh
 aws ssm describe-instance-information --query "InstanceInformationList[*]" --output json
+
 ```
 
 ## Remotely execute script to download objects from S3 to Amazon EFS
-Run this command to remotely execute the scale-out-tutorial-get-lidar-data.sh script which will download all objects from the DC-LiDAR public dataset to the Amazon EFS file system specified in the CloudFormation template parameters.
+Run this command from your local laptop to remotely execute the scale-out-tutorial-get-lidar-data.sh script which will download all objects from the DC-LiDAR public dataset to the Amazon EFS file system specified in the CloudFormation template parameters. Make sure to add a region parameter if appropriate (e.g. --region us-west-2)
 ```sh
 aws ssm send-command --targets "Key=tag:Name,Values=Scale-out Tutorial" --document-name "AWS-RunShellScript" --comment "Scale-out Tutorial" --parameters commands=/tmp/scale-out-tutorial-get-lidar-data.sh --output text --query "Command.CommandId"
+
 ```
 
 ## Verify the script is executing on each EC2 instance
 Once the script has been successfully executed, the Name tag of each instance will change from 'Scale-out Tutorial' to 'Scale-out Tutorial  parallel s3 cp (running)'
+
+- Use the CloudWatch dashboard to view performance of the data load.
 
 
 ---
@@ -89,11 +95,10 @@ Once the script has been successfully executed, the Name tag of each instance wi
 | :---
 ---
 
-
-## Troubleshooting
 For feedback, suggestions, or corrections, please email me at [darrylo@amazon.com](mailto:darrylo@amazon.com).
 
-## License
+## License Summary
 
-This library is licensed under the Amazon Software License.
+This sample code is made available under a modified MIT license. See the LICENSE file.
+
 
