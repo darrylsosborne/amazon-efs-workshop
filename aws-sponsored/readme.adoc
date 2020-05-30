@@ -11,7 +11,7 @@ Click the link below to access the type of AWS sponsored workshop you want to ru
 
 [cols="1"]
 |===
-a|image::efs-as-workshop.png[link=../01-access-as-environment/]
+a|image::efs-as-workshop.png[align="left",width=420,link=../01-access-as-environment/]
 |===
 
 NOTE: You will incur charges as you go through either of these workshops, as the resources launched will exceed the link:http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-limits.html[limits of AWS free tier].
