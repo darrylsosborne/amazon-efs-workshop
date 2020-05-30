@@ -3,7 +3,7 @@
 :linkattrs:
 :imagesdir: ../resources/images
 
-image:efs-aws-logos.png[align="left",width=420]
+image:efs-aws-logos.png[align="left",width=440]
 
 This is workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) full-managed Network File System (NFS) service - link:https://aws.amazon.com/efs/[Amazon EFS].
 
