@@ -5,7 +5,7 @@
 
 image:efs-aws-logos.png[align="left",width=420]
 
-This is a set of tutorials designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) full-managed Network File System (NFS) service - link:https://aws.amazon.com/efs/[Amazon EFS].
+This is workshop designed for architects and engineers who would like to learn more about Amazon Web Services (AWS) full-managed Network File System (NFS) service - link:https://aws.amazon.com/efs/[Amazon EFS].
 
 Click the link below to access the type of AWS sponsored workshop you want to run, **Amazon EFS**.
 
