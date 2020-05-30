@@ -1,0 +1,67 @@
+= Connect to Instances
+:toc:
+:icons:
+:linkattrs:
+:imagesdir: ../resources/images
+
+
+== Summary
+
+In this section you will establish connections to Linux instances you will use for the remainder of the workshop.
+
+
+== Duration
+
+NOTE: It will take approximately 5 minutes to complete this section.
+
+
+== Step-by-step Guide
+
+=== Connect to the Windows instance
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::connect-linux-instances.gif[align="left", width=600]
+
+
+. Open the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
++
+TIP: *_Context-click (right-click)_* the link above and open the link in a new tab or window to make it easy to navigate between this github workshop and AWS console.
++
+. Make sure you are in the same *AWS Region* as the workshop environment. If you need to change the *AWS Region* of the Amazon EC2 console, in the top right corner of the browswer window *_click_* the region name next to *Support* and *_click_* the appropriate *AWS Region* from the drop-down menu.
+
+. *_Click_* *Running Instances*.
+
+. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance*.
+
+. *_Click_* the *Connect* button.
+
+. *_Click_* the radio button next to *EC2 Instance Connect (browser-based SSH connection)*.
+
+. Leave the default user name as *ec2-user* and *_click_* *Connect*.
+
+. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
+
+. In the left frame under *INSTANCES* (uppercase), *_context-click (right-click)_* *Instances* (lowercase) and *_select_* *Open Link in New Tab*.
+
+. _*Click*_ on the new tab that was just opened.
+
+. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance*.
+
+. *_Click_* the *Connect* button.
+
+. *_Click_* the radio button next to *EC2 Instance Connect (browser-based SSH connection)*.
+
+. Leave the default user name as *ec2-user* and *_click_* *Connect*.
+
+NOTE: You should have have two separate browser-based SSH connection windows opened to the same EC2 instance.
+
+== Next section
+
+Click the link below to go to the next section.
+
+image::mount-filesystem.png[link=../03-mount-filesystem/, align="left",width=420]
+
+
+
+
