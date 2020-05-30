@@ -9,7 +9,9 @@ This is workshop designed for architects and engineers who would like to learn m
 
 Click the link below to access the type of AWS sponsored workshop you want to run, **Amazon EFS**.
 
-[cols="1,1"]
+image::efs-as-workshop.png[link=../01-access-as-environment/]
+
+[cols="1"]
 |===
 a|image::efs-as-workshop.png[link=../01-access-as-environment/]
 |===
