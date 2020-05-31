@@ -109,19 +109,19 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 |===
 | *Threads* | *File size (KB)* | *File count (per thread)* | *File count (total)* | *Same directory* | *Elapsed time (sec)* | *IOPS*
 
-| `1`
-| `4`
-| `1024`
-| `1024`
-| `Y`
+| 1
+| 4
+| 1024
+| 1024
+| Y
 | 11.369
 | 90.066095
 
-| `2`
-| `4`
-| `512`
-| `1024`
-| `Y`
+| 2
+| 4
+| 512
+| 1024
+| Y
 | 5.820
 | 176.009550
 
