@@ -199,7 +199,7 @@ time seq 1 32 \| parallel --will-cite -j 32 touch /efs/touch/${directory}/{}/tes
 +
 . The following table and graph shows an example of the results you should expect.
 +
-[cols="3,10"]
+[cols="3,3,3"]
 |===
 |*Threads* |*IOPS* |*Duration seconds*
 
