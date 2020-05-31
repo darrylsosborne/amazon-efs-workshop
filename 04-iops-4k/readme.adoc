@@ -81,7 +81,7 @@ MiB/sec = 0.335430
 * HINT: Look at the value of the variable "--same-dir".
 . _*Copy*_ the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
 +
-[cols="4,10"]
+[cols="5,10"]
 |===
 | Parameter | Description
 
@@ -109,19 +109,19 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 |===
 | *Threads* | *File size (KB)* | *File count (per thread)* | *File count (total)* | *Same directory* | *Elapsed time (sec)* | *IOPS*
 
-| 1
-| 4
-| 1024
-| 1024
-| Y
+| `1`
+| `4`
+| `1024`
+| `1024`
+| `Y`
 | 11.369
 | 90.066095
 
-| 2
-| 4
-| 512
-| 1024
-| Y
+| `2`
+| `4`
+| `512`
+| `1024`
+| `Y`
 | 5.820
 | 176.009550
 
