@@ -149,19 +149,19 @@ sys0m0.142s
 tree --du -h /efs/touch/${directory}
 ----
 
-[width="80%",cols="3,10",options="header"]
+[cols="3,10",options="header"]
 |===
 |Threads |Parallel touch command
 
-| 1
-| directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
+|1 |
+directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
 mkdir -p /efs/touch/${directory}/{1..1}
 time seq 1 1 | parallel --will-cite -j 1 touch /efs/touch/${directory}/{}/test.{1..1024}
 
-| 2
-| `directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
+|2 |
+directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
 mkdir -p /efs/touch/${directory}/{1..2}
-time seq 1 2 | parallel --will-cite -j 2 touch /efs/touch/${directory}/{}/test.{1..512}`
+time seq 1 2 | parallel --will-cite -j 2 touch /efs/touch/${directory}/{}/test.{1..512}
 
 
 |===
