@@ -142,7 +142,29 @@ sys0m0.142s
 * Answer: 0.658 seconds
 . Why was this so much faster than all the other tests?
 * Having each thread write to its own unique directory avoids inode contention. An inode is a data structure on Linux file systems that stores certain file and directory metadata about file system objects. Instead of the script needing to update one directory inode for every file being generated, it updates all directory inodes in parallel for every file being generated. This, along with generating files in parallel using multiple threads, helps to maximize the achievable IOPS by taking advantage of the distributed data storage design of Amazon EFS.
+. Experiment running the previous script using different numbers of threads. _*Run*_ the commands in the table below. To validate the creation of all 1024 files, run the following *tree* command after each parallel touch command to get a count of all the files created.
 
+[source,bash]
+----
+tree --du -h /efs/touch/${directory}
+----
+
+[cols="3,10"]
+|===
+| *Threads* | *Parallel touch command*
+
+| 1
+| `directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
+mkdir -p /efs/touch/${directory}/{1..1}
+time seq 1 1 | parallel --will-cite -j 1 touch /efs/touch/${directory}/{}/test.{1..1024}`
+
+| 2
+| `directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
+mkdir -p /efs/touch/${directory}/{1..2}
+time seq 1 2 | parallel --will-cite -j 2 touch /efs/touch/${directory}/{}/test.{1..512}`
+
+
+|===
 
 == Next section
 
