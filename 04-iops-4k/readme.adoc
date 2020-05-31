@@ -105,7 +105,6 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 * The following table lists the sample results of a few tests. Look how increasing the number of threads (parallelism) and writing to different subdirectories (decreasing inode contention) impacts the results.
 
 +
-[cols="3,10"]
 |===
 | *Threads* | *File size (KB)* | *File count (per thread)* | *File count (total)* | *Same directory* | *Elapsed time (sec)* | *IOPS* |
 
