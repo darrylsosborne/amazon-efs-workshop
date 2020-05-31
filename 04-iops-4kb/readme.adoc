@@ -102,12 +102,12 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 
 * What different parameters did you test?
 * How did the different parameter options alter the results?
-* The following table and graph shows the sample results of a few tests. Look how increasing the number of threads (parallelism) and writing to different subdirectories (decreasing inode contention) impacts the results.
+* The following table and graphs show the sample results of a few tests. Look how increasing the number of threads (parallelism) and writing to different subdirectories (decreasing inode contention) impacts the IOPS and duration.
 
 +
 [cols="3,3,2,3,3,3,3",options="header"]
 |===
-|Threads |File size (KB) |File count (per thread) |File count (total) |Same directory |Elapsed time (sec) |IOPS
+|Threads |File size (KB) |File count (per thread) |File count (total) |Same directory |Duration (seconds) |IOPS
 
 | 1
 | 4
@@ -207,8 +207,8 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 
 |===
 
-image::iops-4kb-iops-graph.png[align="left", width=600]
-image::iops-4kb-duration-graph.png[align="right", width=600]
+image::iops-4kb-iops-graph.png[align="left"]
+image::iops-4kb-duration-graph.png[align="left"]
 
 == Next section
 
