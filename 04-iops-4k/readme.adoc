@@ -107,7 +107,7 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 +
 [cols="3,10"]
 |===
-| *Threads* | *File size (KB)* | *File count (per thread)* | *File count (total)* | *Same directory* | *Elapsed time (sec)* | *IOPS*
+| *Threads* | *File size (KB)* | *File count (per thread)* | *File count (total)* | *Same directory* | *Elapsed time (sec)* | *IOPS* |
 
 | 1
 | 4
@@ -206,7 +206,7 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 | 1973.441341
 
 |===
-+
+
 
 == Next section
 
