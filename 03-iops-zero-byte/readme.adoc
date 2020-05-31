@@ -44,7 +44,6 @@ mount -t nfs4
 fs-01234abc.efs.us-east-1.amazonaws.com:/ on /efs type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,noresvport,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.0.0.12,local_lock=none,addr=10.0.1.176,_netdev)
 ----
 +
-. What is the mount point of the EFS file system?
 * Answer: /efs
 
 . *_Run_* the following script.
@@ -71,8 +70,7 @@ sys0m0.210s
 +
 * 12.545 seconds
 . Do you consider this fast or slow?
-. Lets see how long it takes to generate the same amount of zero-bytes files on an EBS volume. _*Run*_ the following script.
-.
+. Lets see how long it takes to generate the same amount of zero-bytes files on an EBS volume. *_Run_* the following script.
 +
 [source,bash]
 ----
@@ -96,7 +94,7 @@ sys0m0.182s
 +
 * 0.648 seconds
 . Do you consider this fast or slow?
-. What if we re-designed the script to use multiple threads and ran it against the EFS file system again? _*Run*_ the following script.
+. What if you re-wrote the script to use multiple threads and ran it against the EFS file system again? *_Run_* the following script.
 +
 [source,bash]
 ----
@@ -119,7 +117,7 @@ sys0m2.440s
 * Answer: 6.138 seconds
 . Why was this so much faster than the first test against the EFS file system?
 * Generating files in parallel using multiple threads takes advantage of the distributed data storage design of Amazon EFS.
-. What if we re-designed the script again to so each thread writes to its own subdirectory in parallel? _*Run*_ the following script.
+. What if you re-wrote the script again so each thread writes to its own directory in parallel? *_Run_* the following script.
 +
 [source,bash]
 ----
@@ -141,7 +139,7 @@ sys0m0.142s
 +
 * Answer: 0.658 seconds
 . Why was this so much faster than all the other tests?
-* Having each thread write to its own unique subdirectory avoids inode contention. An inode is a data structure on Linux file systems that stores certain file and directory metadata about file system objects. Instead of the script needing to update one directory inode for every file being generated, it updates all directory inodes in parallel for every file being generated. This, along with generating files in parallel using multiple threads, helps to maximize the achievable IOPS by taking advantage of the distributed data storage design of Amazon EFS.
+* Having each thread write to its own unique directory avoids inode contention. An inode is a data structure on Linux file systems that stores certain file and directory metadata about file system objects. Instead of the script needing to update one directory inode for every file being generated, it updates all directory inodes in parallel for every file being generated. This, along with generating files in parallel using multiple threads, helps to maximize the achievable IOPS by taking advantage of the distributed data storage design of Amazon EFS.
 
 
 == Next section
