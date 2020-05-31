@@ -29,7 +29,7 @@ image::iops-4k.gif[align="left", width=600]
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
-. *_Copy_* > *_paste_* > and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
+. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
 +
 [source,bash]
 ----
@@ -79,7 +79,7 @@ MiB/sec = 0.335430
 . How many threads were used?
 . Were the files generated in the same directory?
 * HINT: Look at the value of the variable "--same-dir".
-. _*Copy*_ the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
+. *_Copy_* the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
 +
 [cols="5,5"]
 |===
