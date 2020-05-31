@@ -155,11 +155,11 @@ tree --du -h /efs/touch/${directory}
 
 |1 a|
 
-`directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
+`directory=$(echo $(uuidgen)\| grep -o ".\{6\}$")
 
 mkdir -p /efs/touch/${directory}/{1..1}
 
-time seq 1 1 | parallel --will-cite -j 1 touch /efs/touch/${directory}/{}/test.{1..1024}`
+time seq 1 1 \| parallel --will-cite -j 1 touch /efs/touch/${directory}/{}/test.{1..1024}`
 
 |2 |
 directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
