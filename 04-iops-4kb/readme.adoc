@@ -207,8 +207,14 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 
 |===
 
-image::iops-4kb-iops-graph.png[align="left"]
-image::iops-4kb-duration-graph.png[align="left"]
+--
+[.left]
+.IOPS
+image::iops-4kb-iops-graph.png[450, scaledwidth="75%"]
+[.left]
+.Duration
+image::iops-4kb-duration-graph.png[450, scaledwidth="75%"]
+--
 
 == Next section
 
