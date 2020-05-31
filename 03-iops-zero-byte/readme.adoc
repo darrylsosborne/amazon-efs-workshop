@@ -149,9 +149,9 @@ sys0m0.142s
 tree --du -h /efs/touch/${directory}
 ----
 
-[cols="3,10"]
+[width="80%",cols="3,10",options="header"]
 |===
-| *Threads* | *Parallel touch command*
+|Threads |Parallel touch command
 
 | 1
 | directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
