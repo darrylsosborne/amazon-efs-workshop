@@ -95,13 +95,14 @@ sys0m0.182s
 * 0.648 seconds
 . Do you consider this fast or slow?
 . What if you re-wrote the script to use multiple threads and ran it against the EFS file system again? *_Run_* the following script.
+* The script uses 32 threads to generate 1024 zero-byte files in parallel.
 +
 [source,bash]
 ----
 directory=$(echo $(uuidgen)| grep -o ".\{6\}$")
 mkdir -p /efs/touch/${directory}
 
-time seq 1 1024 | parallel --will-cite -j 128 touch /efs/touch/${directory}/test-1.2-{}
+time seq 1 1024 | parallel --will-cite -j 32 touch /efs/touch/${directory}/test-1.2-{}
 ----
 +
 . How many seconds did it take to generate 1024 zero-byte files in parallel using multiple threads on the EFS file system?
@@ -118,6 +119,7 @@ sys0m2.440s
 . Why was this so much faster than the first test against the EFS file system?
 * Generating files in parallel using multiple threads takes advantage of the distributed data storage design of Amazon EFS.
 . What if you re-wrote the script again so each thread writes to its own directory in parallel? *_Run_* the following script.
+* The script uses 32 threads - each writing 32 files in its own directory - generating a total of 1024 zero-byte files (32x32=1024).
 +
 [source,bash]
 ----
