@@ -206,7 +206,7 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 | 1973.441341
 
 |===
-+
+
 image::iops-4kb-iops-graph.png[align="left", width=600]
 image::iops-4kb-duration-graph.png[align="right", width=600]
 
