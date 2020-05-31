@@ -17,7 +17,7 @@ NOTE: It will take approximately 5 minutes to complete this section.
 
 == Step-by-step Guide
 
-=== Connect to the Windows instance
+=== Connect to Linux instances
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
@@ -32,7 +32,7 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 . *_Click_* *Running Instances*.
 
-. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance*.
+. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 0*.
 
 . *_Click_* the *Connect* button.
 
@@ -40,27 +40,15 @@ TIP: *_Context-click (right-click)_* the link above and open the link in a new t
 
 . Leave the default user name as *ec2-user* and *_click_* *Connect*.
 
-. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console.
+. Repeat the previous steps and establish two additional browser-based SSH connection sessions; one for *EFS Workshop Linux Instance 1* and another for *EFS Workshop Linux Instance 2*.
 
-. In the left frame under *INSTANCES* (uppercase), *_context-click (right-click)_* *Instances* (lowercase) and *_select_* *Open Link in New Tab*.
-
-. _*Click*_ on the new tab that was just opened.
-
-. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance*.
-
-. *_Click_* the *Connect* button.
-
-. *_Click_* the radio button next to *EC2 Instance Connect (browser-based SSH connection)*.
-
-. Leave the default user name as *ec2-user* and *_click_* *Connect*.
-
-NOTE: You should have have two separate browser-based SSH connection windows opened to the same EC2 instance.
+NOTE: You should now have three separate browser-based SSH connection windows open.
 
 == Next section
 
 Click the link below to go to the next section.
 
-image::mount-filesystem.png[link=../03-mount-filesystem/, align="left",width=420]
+image::iops-zero-byte.png[link=../03-iops-zero-byte/, align="left",width=420]
 
 
 
