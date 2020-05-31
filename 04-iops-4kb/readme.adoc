@@ -81,7 +81,7 @@ MiB/sec = 0.335430
 * HINT: Look at the value of the variable "--same-dir".
 . *_Copy_* the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
 +
-[cols="5,5"]
+[cols="10,5"]
 |===
 | Parameter | Description
 
