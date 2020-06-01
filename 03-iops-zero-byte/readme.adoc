@@ -46,7 +46,7 @@ fs-01234abc.efs.us-east-1.amazonaws.com:/ on /efs type nfs4 (rw,relatime,vers=4.
 +
 * Answer: /efs
 
-. *_Run_* the following script.
+. *_Run_* the following script to test how long it takes to genereate 1024 zero-bytes files on an EFS file system.
 +
 [source,bash]
 ----

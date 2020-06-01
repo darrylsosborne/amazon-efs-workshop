@@ -210,17 +210,17 @@ a| Y will generate all files in the same direct - increasing inode contention. N
 --
 [.left]
 .IOPS
-image::iops-4kb-iops-graph.png[450, scaledwidth="75%"]
+image:iops-4kb-iops-graph.png[450, scaledwidth="75%"]
 [.left]
 .Duration
-image::iops-4kb-duration-graph.png[450, scaledwidth="75%"]
+image:iops-4kb-duration-graph.png[450, scaledwidth="75%"]
 --
 
 == Next section
 
 Click the link below to go to the next section.
 
-image::instance-throughput.png[link=../05-instance-throughput, align="left",width=420]
+image::iops-4k.png[link=../04-iops-4k/, align="left",width=420]
 
 
 
