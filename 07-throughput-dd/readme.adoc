@@ -178,11 +178,11 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 * The following table and graphs show the sample results of these tests. Look how increasing the size of the IO (reducing sync operations) and increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
 +
-[cols="6*",options="header"]
-|===
 
-| :-----: | :-----: | :------------: | :-------------: | -----------------: | ----------------:
+|===
 | Storage | Threads | Data size (MB) | Block size (MB) | Duration (seconds) | Throughput (MB/s)
+| :-----: | :-----: | :------------: | :-------------: | -----------------: | ----------------:
+
 | EBS     | 1       | 2048           | 1               | 15.002             | 136.5
 
 ^.^| EFS
