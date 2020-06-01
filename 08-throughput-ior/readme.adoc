@@ -1,4 +1,4 @@
-= IOPS 4KB Files
+= Parallelism and throughput using IOR
 :toc:
 :icons:
 :linkattrs:
@@ -7,221 +7,299 @@
 
 == Summary
 
-This section will demonstrate how parallelism increases achievable IOPS of an EFS file system.
-
+This section will demonstrate how increasing the number of threads accessing an EFS file system will significantly improve throughput.
 
 == Duration
 
-NOTE: It will take approximately 10 minutes to complete this section.
+NOTE: It will take approximately 15 minutes to complete this section.
 
 
 == Step-by-step Guide
 
-=== Generate 4KB files using smallfile
-
-NOTE: smallfile is a python-based distributed POSIX workload generator which can be used to quickly measure performance for a variety of metadata-intensive workloads across an entire cluster. It is an excellent tool to test file systems and I use it regularly to measure and demonstrate operation performance of Amazon EFS and Amazon FSx file systems. Learn more about smallfile from Ben England's github repo - link:https://github.com/distributed-system-analysis/smallfile[smallfile].
+=== Different levels of parallelism
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
-image::iops-4k.gif[align="left", width=600]
+image::throughput-ior.gif[align="left", width=600]
 
-. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* instance.
+. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* - m5n.2xlarge instance.
 +
-TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 0*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
-. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
-+
-[source,bash]
-----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
-path=/efs/smallfile/${job_name}
-sudo mkdir -p ${path}
-
-threads=1
-file_size=4
-file_count=1024
-operation=create
-same_dir=Y
-
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path}
-----
-+
-
-. How many seconds did it take to generate 1024 zero-byte files on the EFS file system?
-* The ouput of the script should look similar to this:
+. *_Run_* the following IOR command to generate one 2 GiB file using one thread on an EFS file system. IOR is a commonly used file system benchmarking application typically used to evaluate the performance of distributed and parallel file systems. You can read more about IOR here - link:http://wiki.lustre.org/IOR[http://wiki.lustre.org/IOR].
 +
 [source,bash]
 ----
-host = ip-10-0-0-12,thr = 00,elapsed = 11.924979,files = 1024,records = 1024,status = ok
-total threads = 1
-total files = 1024
-total IOPS = 85
-total data =     0.004 GiB
-100.00% of requested files processed, warning threshold is  70.00
-elapsed time =    11.925
-files/sec = 85.870172
-IOPS = 85.870172
-MiB/sec = 0.335430
+module load mpi/openmpi-x86_64
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+
 ----
 +
-. What was the IOPS?
-. How many threads were used?
-. Were the files generated in the same directory?
-* HINT: Look at the value of the variable "--same-dir".
-. *_Copy_* the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
+* The results should look similar to this.
+[source,bash]
+----
+IOR-3.3.0+dev: MPI Coordinated Test of Parallel I/O
+Began               : Mon Jun  1 19:21:30 2020
+Command line        : ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
+Machine             : Linux ip-10-0-0-11
+Start time skew across all tasks: 0.00 sec
+TestID              : 0
+StartTime           : Mon Jun  1 19:21:30 2020
+Path                : /efs/ior
+FS                  : 8388608.0 TiB   Used FS: 0.0%   Inodes: 0.0 Mi   Used Inodes: -nan%
+Participating tasks: 1
+
+Options:
+api                 : POSIX
+apiVersion          :
+test filename       : /efs/ior/ior.bin
+access              : single-shared-file
+type                : independent
+segments            : 2048
+ordering in a file  : sequential
+ordering inter file : no tasks offsets
+nodes               : 1
+tasks               : 1
+clients per node    : 1
+repetitions         : 1
+xfersize            : 1 MiB
+blocksize           : 1 MiB
+aggregate filesize  : 2 GiB
+
+Results:
+
+access    bw(MiB/s)  IOPS       Latency(s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+------    ---------  ----       ----------  ---------- ---------  --------   --------   --------   --------   ----
+Commencing write performance test: Mon Jun  1 19:21:30 2020
+write     24.38      24.39      83.98       1024.00    1024.00    0.004828   83.98      0.000897   83.99      0
+Max Write: 24.38 MiB/sec (25.57 MB/sec)
+
+Summary of all tests:
+Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mean(OPs)     StdDev    Mean(s) Stonewall(s) Stonewall(MiB) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt   blksiz    xsize aggs(MiB)   API RefNum
+write          24.38      24.38      24.38       0.00      24.38      24.38      24.38       0.00   83.99048         NA            NA     0      1   1    1   0     0        1         0    0   2048  1048576  1048576    2048.0 POSIX      0
+Finished            : Mon Jun  1 19:22:54 2020
+----
+. Record the results somewhere (e.g. your favorite text editor).
+. How long did it take (total seconds)?
+. What was the bandwidth or throughput (MB/s)?
 +
-[cols="10,5"]
-|===
-| Parameter | Description
+. *_Run_* the following IOR command to generate one 2 GiB file using two threads on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
 
-| `--threads`
-a| Number of threads.
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate one 2 GiB file using two threads on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
-| `--file-size`
-a| File size in KB.
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
 
-| `--file-count`
-a| Number of files per thread. For example, if you want to see how long it takes to generate 1024 files using 16 threads, change the --threads parameter to 16 and the --file-count parameter to 64 (1024÷16=64).
 
-| `--same-dir`
-a| Y will generate all files in the same direct - increasing inode contention. N will generate files in different directories, one for each thread - decreasing inode contention.
 
-|===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+. *_Run_* this command to generate 2GB of data on the EFS file system using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress conv=fsync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 11.516s
+
+
+. *_Run_* this command to generate 2GB of data on the EBS volume using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress conv=fsync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 17.757s
+
+
+. *_Run_* this command to generate 2GB of data on the EFS file system using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress conv=fsync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 11.611s
+
+
+. *_Run_* this command to generate 2GB of data on the EBS volume using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 15.002s
+
+
+. *_Run_* this command to generate 2GB of data on the EFS file system using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 1m26.699s
+. Why did this take so long?
+* A sync operation that persists data and metadata to disk is issued after everyone 1MB block, so there are 2048 sync operations issues. The distributed data storage design of Amazon EFS introduces slightly higher latencies per file system operation, and because this dd command is a serial operation, it needs to wait for each 1MB block to persist to disk before starting to write the next 1MB block. This type of operation magnifies the higher latencies of Amazon EFS.
+
+
+. *_Run_* this command to generate 2GB of data on the EBS volume using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 15.002s
+
+
+. *_Run_* this command to generate 2GB of data on the EFS file system using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
++
+[source,bash]
+----
+time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 30.574s
+. Is there a significant duration difference between the commands writing to the EBS volume?
+. Why not?
+* The latency per file system operation is very low so the number of sync operations doesn't make a significant difference.
+. Why is there such a duration variance between the commands writing to the EFS file system?
+. The distributed data storage design of Amazon EFS introduces slightly higher latencies per file system operation, and because this dd command is a serial operation, it needs to wait for each block to persist to disk before starting to write the next block. Less sync operations increases achievable throughput.
+
+
+=== Different levels of parallelism
+
+IMPORTANT: Read through all steps below and watch the quick video before continuing.
+
+image::throughput-dd.gif[align="left", width=600]
+
+. *_Run_* this command to generate 2GB of data on the EBS volume using 4 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
++
+[source,bash]
+----
+time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 15.083s
+
+. *_Run_* this command to generate 2GB of data on the EFS file system using 4 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
++
+[source,bash]
+----
+time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 0m23.292s
+. Compare this to the results above when you wrote to the EFS file system using 1 thread and a 1 MB block size, issuing a sync after each block. Is there a big difference? Why?
+
+
+. *_Run_* this command to generate 2GB of data on the EBS volume using 16 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
++
+[source,bash]
+----
+time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 15.093s
+
+. *_Run_* this command to generate 2GB of data on the EFS file system using 16 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
++
+[source,bash]
+----
+time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
+----
++
+. Record these results somewhere (e.g. your favorite text editor).
+. How long did it take? - 0m10.581s
+. Compare this to the results above when you wrote to the EFS file system using 1 thread and a 1 MB block size, issuing a sync after each block. Is there a big difference? Why?
+. Review the results of all the EBS tests. Was there a significant difference between any of them?
+. Review the results of all the EFS tests. Why was there a significant difference between them?
+. Where you able to achieve higher overall throughput writting to an EFS file system than a local EBS volume?
+
+* The following table and graphs show the sample results of these tests. Look how increasing the size of the IO (reducing sync operations) and increasing the number of threads (increasing parallelism) impacts the throughput and duration.
+
 +
 
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-* The following table and graphs show the sample results of a few tests. Look how increasing the number of threads (increasing parallelism) and writing to different subdirectories (decreasing inode contention) impacts the IOPS and duration.
-
-+
-[cols="3,3,2,3,3,3,3",options="header"]
-|===
-|Threads |File size (KB) |File count (per thread) |File count (total) |Same directory |Duration (seconds) |IOPS
-
-| 1
-| 4
-| 1024
-| 1024
-| Y
-| 11.369
-| 90.066095
-
-| 2
-| 4
-| 512
-| 1024
-| Y
-| 5.820
-| 176.009550
-
-| 4
-| 4
-| 256
-| 1024
-| Y
-| 5.883
-| 174.591562
-
-| 8
-| 4
-| 128
-| 1024
-| Y
-| 5.882
-| 175.117492
-
-| 16
-| 4
-| 64
-| 1024
-| Y
-| 5.629
-| 184.055531
-
-| 32
-| 4
-| 32
-| 1024
-| Y
-| 5.641
-| 186.835993
-
-| 1
-| 4
-| 1024
-| 1024
-| N
-| 11.958
-| 85.633895
-
-| 2
-| 4
-| 512
-| 1024
-| N
-| 5.452
-| 188.621103
-
-| 4
-| 4
-| 256
-| 1024
-| N
-| 2.755
-| 372.936600
-
-| 8
-| 4
-| 128
-| 1024
-| N
-| 1.390
-| 746.051127
-
-| 16
-| 4
-| 64
-| 1024
-| N
-| 0.819
-| 1281.790673
-
-| 32
-| 4
-| 32
-| 1024
-| N
-| 0.535
-| 1973.441341
-
-|===
+|==============================================================================================
+| Storage | Threads | Data size (MB) | Block size (MB) | Duration (seconds) | Throughput (MB/s)
+| EBS     | 1       | 2048           | 1               | 15.002             | 136.5
+| EFS     | 1       | 2048           | 1               | 86.699             | 23.6
+| EBS     | 1       | 2048           | 16              | 15.002             | 136.5
+| EFS     | 1       | 2048           | 16              | 30.574             | 67.0
+| EBS     | 4       | 2048           | 1               | 15.083             | 135.8
+| EFS     | 4       | 2048           | 1               | 23.292             | 87.9
+| EBS     | 16      | 2048           | 1               | 15.093             | 135.7
+| EFS     | 16      | 2048           | 1               | 10.581             | 193.6
+|==============================================================================================
 
 --
 [.left]
 .IOPS
-image:iops-4kb-iops-graph.png[450, scaledwidth="75%"]
+image::throughput-dd-throughput-graph.png[450, scaledwidth="75%"]
 [.left]
 .Duration
-image:iops-4kb-duration-graph.png[450, scaledwidth="75%"]
+image::throughput-dd-duration-graph.png[450, scaledwidth="75%"]
 --
+
 
 == Next section
 
 Click the link below to go to the next section.
 
-image::iops-4k.png[link=../04-iops-4k/, align="left",width=420]
-
-
-
+image::transfer-tools.png[link=../09-transfer-tools, align="left",width=420]
 
