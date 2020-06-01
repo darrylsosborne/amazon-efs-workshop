@@ -80,6 +80,7 @@ Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mea
 write          24.38      24.38      24.38       0.00      24.38      24.38      24.38       0.00   83.99048         NA            NA     0      1   1    1   0     0        1         0    0   2048  1048576  1048576    2048.0 POSIX      0
 Finished            : Mon Jun  1 19:22:54 2020
 ----
++
 * Record the results somewhere (e.g. your favorite text editor).
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
