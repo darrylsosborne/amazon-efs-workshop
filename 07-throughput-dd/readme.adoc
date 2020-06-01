@@ -238,8 +238,6 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 ^.^| 10.581
 ^.^| 193.6
 
-|===
-
 --
 [.left]
 .IOPS
