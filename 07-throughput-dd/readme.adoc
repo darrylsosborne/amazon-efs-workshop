@@ -181,7 +181,7 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 
 :frame: none
 :grid: none
-:valign: top
+:valign: center
 
 [align="center", cols="6", grid="none", frame="none"]
 |==============================================================================================
