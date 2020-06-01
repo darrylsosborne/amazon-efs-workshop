@@ -208,7 +208,7 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 | 2048
 | 16
 | 30.574
-| 66.99
+| 67.0
 
 | EBS
 | 4
