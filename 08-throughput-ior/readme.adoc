@@ -37,6 +37,7 @@ mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -
 ----
 +
 * The results should look similar to this.
++
 [source,bash]
 ----
 IOR-3.3.0+dev: MPI Coordinated Test of Parallel I/O
