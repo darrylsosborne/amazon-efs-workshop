@@ -206,7 +206,7 @@ image::throughput-dd-duration-graph.png[450, scaledwidth="75%"]
 
 Click the link below to go to the next section.
 
-image::throughput-dd.png[link=../04-iops-4kb/, align="left",width=420]
+image::throughput-dd.png[link=../08-throughput-iorr, align="left",width=420]
 
 
 
