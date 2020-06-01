@@ -106,7 +106,7 @@ nload -u M
 
 Click the link below to go to the next section.
 
-image::throughput-dd.png[link=../06-throughput-dd/, align="left",width=420]
+image::provisioned-throughput.png[link=../06-provisioned-throughput/, align="left",width=420]
 
 
 
