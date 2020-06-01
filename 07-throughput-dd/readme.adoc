@@ -180,9 +180,9 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 +
 [cols="6*",options="header"]
 |===
-| Storage | Threads | Data size (MB) | Block size (MB) | Duration (seconds) | Throughput (MB/s) |
-| :-----: | :-----: | :------------: | :-------------: | -----------------: | ----------------: |
-| EBS     | 1       | 2048           | 1               | 15.002             | 136.5             |
+| Storage | Threads | Data size (MB) | Block size (MB) | Duration (seconds) | Throughput (MB/s)
+| :-----: | :-----: | :------------: | :-------------: | -----------------: | ----------------:
+| EBS     | 1       | 2048           | 1               | 15.002             | 136.5
 
 ^.^| EFS
 ^.^| 1
