@@ -178,7 +178,7 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 * The following table and graphs show the sample results of these tests. Look how increasing the size of the IO (reducing sync operations) and increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
 +
-[cols="6*",options="header"]
+[cols="6*",options="header",frame="topbot"]
 |===
 ^|Storage
 ^|Threads
