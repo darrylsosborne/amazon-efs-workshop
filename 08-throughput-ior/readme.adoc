@@ -41,7 +41,7 @@ mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -
 ----
 IOR-3.3.0+dev: MPI Coordinated Test of Parallel I/O
 Began               : Mon Jun  1 19:21:30 2020
-Command line        : ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
+Command line        : ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
 Machine             : Linux ip-10-0-0-11
 Start time skew across all tasks: 0.00 sec
 TestID              : 0
@@ -80,9 +80,9 @@ Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev   Max(OPs)   Min(OPs)  Mea
 write          24.38      24.38      24.38       0.00      24.38      24.38      24.38       0.00   83.99048         NA            NA     0      1   1    1   0     0        1         0    0   2048  1048576  1048576    2048.0 POSIX      0
 Finished            : Mon Jun  1 19:22:54 2020
 ----
-. Record the results somewhere (e.g. your favorite text editor).
-. How long did it take (total seconds)?
-. What was the bandwidth or throughput (MB/s)?
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
 +
 . *_Run_* the following IOR command to generate one 2 GiB file using two threads on an EFS file system.
 +
@@ -97,12 +97,337 @@ mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate one 2 GiB file using two threads on an EFS file system.
+. *_Run_* the following IOR command to generate one 2 GiB file using four threads on an EFS file system.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate one 2 GiB file using eight threads on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate one 2 GiB file using sixteen threads on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate one 2 GiB file using thirty-two threads on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate one 2 GiB file using sixty-four threads on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using one thread (e.g. one file one directory) on an EFS file system (notice the new *-F* filePerProc -- file-per-process flag).
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using two threads (e.g. two files one directory) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using four threads (e.g. four files one directory) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using eight threads (e.g. eight files one directory) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using sixteen threads (e.g. sixteen files one directory) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using thirty-two threads (e.g. thirty-two files one directory) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using sixty-four threads (e.g. sixty-four files one directory) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using one thread (e.g. one file one directory) on an EFS file system (notice the new flag *-u* uniqueDir -- use unique directory name for each file-per-process; also added *-k* keepFile -- don't remove the test file(s) on program exit -- to keep the files for the next round of read tests).
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using two threads (e.g. two files two directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using four threads (e.g. four files four directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using eight threads (e.g. eight files eight directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using sixteen threads (e.g. sixteen files sixteen directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using thirty-two threads (e.g. thirty-two files thirty-two directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using sixty-four threads (e.g. sixty-four files sixty-four directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using one thread (e.g. one file one directory) on an EFS file system (notice the replacement of *-w* writeFile -- write file with *-r* readFile -- read existing file; also removed *-k* keepFile -- don't remove the test file(s) on program exit -- to clean up the test files).
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using two threads (e.g. two files two directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using four threads (e.g. four files four directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using eight threads (e.g. eight files eight directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using sixteen threads (e.g. sixteen files sixteen directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using thirty-two threads (e.g. thirty-two files thirty-two directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+
+----
++
+* Record the results somewhere (e.g. your favorite text editor).
+* How long did it take (total seconds)?
+* What was the bandwidth or throughput (MB/s)?
++
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using sixty-four threads (e.g. sixty-four files sixty-four directories) on an EFS file system.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -110,166 +435,7 @@ mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-. *_Run_* this command to generate 2GB of data on the EFS file system using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress conv=fsync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 11.516s
-
-
-. *_Run_* this command to generate 2GB of data on the EBS volume using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress conv=fsync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 17.757s
-
-
-. *_Run_* this command to generate 2GB of data on the EFS file system using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress conv=fsync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 11.611s
-
-
-. *_Run_* this command to generate 2GB of data on the EBS volume using a 1 MB block size and issuing a sync after each block to ensure each block is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 15.002s
-
-
-. *_Run_* this command to generate 2GB of data on the EFS file system using a 1 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=1M count=2048 status=progress oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 1m26.699s
-. Why did this take so long?
-* A sync operation that persists data and metadata to disk is issued after everyone 1MB block, so there are 2048 sync operations issues. The distributed data storage design of Amazon EFS introduces slightly higher latencies per file system operation, and because this dd command is a serial operation, it needs to wait for each 1MB block to persist to disk before starting to write the next 1MB block. This type of operation magnifies the higher latencies of Amazon EFS.
-
-
-. *_Run_* this command to generate 2GB of data on the EBS volume using a 16 MB block size and issuing a sync after each block to ensure each block is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 15.002s
-
-
-. *_Run_* this command to generate 2GB of data on the EFS file system using a 16 MB block size and issuing a sync once at the end to ensure everything is written to disk.
-+
-[source,bash]
-----
-time dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N) bs=16M count=128 status=progress oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 30.574s
-. Is there a significant duration difference between the commands writing to the EBS volume?
-. Why not?
-* The latency per file system operation is very low so the number of sync operations doesn't make a significant difference.
-. Why is there such a duration variance between the commands writing to the EFS file system?
-. The distributed data storage design of Amazon EFS introduces slightly higher latencies per file system operation, and because this dd command is a serial operation, it needs to wait for each block to persist to disk before starting to write the next block. Less sync operations increases achievable throughput.
-
-
-=== Different levels of parallelism
-
-IMPORTANT: Read through all steps below and watch the quick video before continuing.
-
-image::throughput-dd.gif[align="left", width=600]
-
-. *_Run_* this command to generate 2GB of data on the EBS volume using 4 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
-+
-[source,bash]
-----
-time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 15.083s
-
-. *_Run_* this command to generate 2GB of data on the EFS file system using 4 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
-+
-[source,bash]
-----
-time seq 1 4 | parallel --will-cite -j 4 dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=512 oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 0m23.292s
-. Compare this to the results above when you wrote to the EFS file system using 1 thread and a 1 MB block size, issuing a sync after each block. Is there a big difference? Why?
-
-
-. *_Run_* this command to generate 2GB of data on the EBS volume using 16 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
-+
-[source,bash]
-----
-time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/ebs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 15.093s
-
-. *_Run_* this command to generate 2GB of data on the EFS file system using 16 threads in parallel and a 1 MB block size, issuing a sync after each block to ensure everything is written to disk.
-+
-[source,bash]
-----
-time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(date +%Y%m%d%H%M%S.%3N)-{} bs=1M count=128 oflag=sync
-----
-+
-. Record these results somewhere (e.g. your favorite text editor).
-. How long did it take? - 0m10.581s
-. Compare this to the results above when you wrote to the EFS file system using 1 thread and a 1 MB block size, issuing a sync after each block. Is there a big difference? Why?
-. Review the results of all the EBS tests. Was there a significant difference between any of them?
-. Review the results of all the EFS tests. Why was there a significant difference between them?
-. Where you able to achieve higher overall throughput writting to an EFS file system than a local EBS volume?
+. Compare the results from the tests above.  Is there a big difference? Why?
 
 * The following table and graphs show the sample results of these tests. Look how increasing the size of the IO (reducing sync operations) and increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 

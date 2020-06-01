@@ -44,7 +44,7 @@ nload -u M
 . Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* - m5n.2xlarge instance.
 . Monitor the outgoing network traffic (throughput) to the EFS file system.
 . How long does it take for the outgoing network traffic (throughput) to the EFS file system to drop to 50 MB/s?
-. Return the previous steps and change the provisioned throughput from 50 MiB/s to 200 MiB/s.
+. Return the previous steps and change the provisioned throughput from 50 MiB/s to 400 MiB/s.
 . How long does it take for the outgoing network traffic (throughput) to the EFS file system to change?
 
 NOTE: With provisioned throughput mode you can provision the desired throughput independent of the amount of data stored in the file system. Throughput modes can be changed (bursting to provisioned or provisioned to bursting) as long as it has been more than 24 hours since the last throughput mode change. When in provisioned throughput mode, the amount of throughput provisioned can decreased as long as it has been more than 24 hours since the last throughput decrease or the last throughput mode change. The amount of throughput provisioned can be increased at anytime.
