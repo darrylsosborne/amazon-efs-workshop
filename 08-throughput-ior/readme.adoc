@@ -37,7 +37,7 @@ IOR is a commonly used file system benchmarking application typically used to ev
 ----
 module load mpi/openmpi-x86_64
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -96,7 +96,7 @@ Finished            : Mon Jun  1 19:22:54 2020
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -109,7 +109,7 @@ mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -122,7 +122,7 @@ mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -135,7 +135,7 @@ mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -148,7 +148,7 @@ mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -161,20 +161,19 @@ mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -w -i 1 -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -w -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
-+
-* Record the results somewhere (e.g. your favorite text editor).
-* How long did it take (total seconds)?
-* What was the bandwidth or throughput (MB/s)?
-+
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using one thread (e.g. one file one directory) on an EFS file system (notice the new *-F* filePerProc -- file-per-process flag).
+
+==== IOR single shared file (SSF) read tests
+
+
+. *_Run_* the following IOR command to read one 2 GiB file using one thread.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -r -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -182,12 +181,12 @@ mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using two threads (e.g. two files one directory) on an EFS file system.
+. *_Run_* the following IOR command to read one 2 GiB file using two threads.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -r -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -195,12 +194,12 @@ mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using four threads (e.g. four files one directory) on an EFS file system.
+. *_Run_* the following IOR command to read one 2 GiB file using four threads.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -r -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -208,12 +207,12 @@ mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using eight threads (e.g. eight files one directory) on an EFS file system.
+. *_Run_* the following IOR command to read one 2 GiB file using eight threads.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -r -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -221,12 +220,12 @@ mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using sixteen threads (e.g. sixteen files one directory) on an EFS file system.
+. *_Run_* the following IOR command to read one 2 GiB file using sixteen threads.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -r -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -234,12 +233,12 @@ mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using thirty-two threads (e.g. thirty-two files one directory) on an EFS file system.
+. *_Run_* the following IOR command to read one 2 GiB file using thirty-two threads.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -r -i 1 -k -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -247,20 +246,22 @@ mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread using sixty-four threads (e.g. sixty-four files one directory) on an EFS file system.
+. *_Run_* the following IOR command to read one 2 GiB file using sixty-four threads.
 +
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -w -i 1 -F -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -r -i 1 -D 0 -o /efs/ior/ior.bin
 
 ----
-+
 * Record the results somewhere (e.g. your favorite text editor).
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
-+
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using one thread (e.g. one file one directory) on an EFS file system (notice the new flag *-u* uniqueDir -- use unique directory name for each file-per-process; also added *-k* keepFile -- don't remove the test file(s) on program exit -- to keep the files for the next round of read tests).
+
+
+==== IOR file per process (FPP) write tests
+
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using one thread (e.g. one file one directory). Notice the new flags *-u* uniqueDir -- use unique directory name for each file-per-process, and *-F* filePerProc — file-per-process flag.
 +
 [source,bash]
 ----
@@ -273,7 +274,7 @@ mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using two threads (e.g. two files two directories) on an EFS file system.
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using two threads (e.g. two files two directories).
 +
 [source,bash]
 ----
@@ -286,7 +287,7 @@ mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using four threads (e.g. four files four directories) on an EFS file system.
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using four threads (e.g. four files four directories).
 +
 [source,bash]
 ----
@@ -299,7 +300,7 @@ mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using eight threads (e.g. eight files eight directories) on an EFS file system.
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using eight threads (e.g. eight files eight directories).
 +
 [source,bash]
 ----
@@ -312,7 +313,7 @@ mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using sixteen threads (e.g. sixteen files sixteen directories) on an EFS file system.
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using sixteen threads (e.g. sixteen files sixteen directories).
 +
 [source,bash]
 ----
@@ -325,7 +326,7 @@ mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using thirty-two threads (e.g. thirty-two files thirty-two directories) on an EFS file system.
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using thirty-two threads (e.g. thirty-two files thirty-two directories).
 +
 [source,bash]
 ----
@@ -338,7 +339,7 @@ mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
 +
-. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using sixty-four threads (e.g. sixty-four files sixty-four directories) on an EFS file system.
+. *_Run_* the following IOR command to generate 2 GiBs of data with one file per thread per directory using sixty-four threads (e.g. sixty-four files sixty-four directories).
 +
 [source,bash]
 ----
@@ -350,8 +351,11 @@ mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v
 * Record the results somewhere (e.g. your favorite text editor).
 * How long did it take (total seconds)?
 * What was the bandwidth or throughput (MB/s)?
-+
-. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using one thread (e.g. one file one directory) on an EFS file system (notice the replacement of *-w* writeFile -- write file with *-r* readFile -- read existing file; also removed *-k* keepFile -- don't remove the test file(s) on program exit -- to clean up the test files).
+
+
+==== IOR file per process (FPP) read tests
+
+. *_Run_* the following IOR command to read 2 GiBs of data from the previous write test with one file per thread per directory using one thread (e.g. one file one directory).
 +
 [source,bash]
 ----
