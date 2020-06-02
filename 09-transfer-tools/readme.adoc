@@ -1,4 +1,4 @@
-= IOPS 4KB Files
+= Transfer tools
 :toc:
 :icons:
 :linkattrs:
@@ -7,74 +7,147 @@
 
 == Summary
 
-This section will demonstrate how parallelism increases achievable IOPS of an EFS file system.
+This section will compare and demonstrate how different file transfer tools affect performance when accessing an EFS file system.
 
 
 == Duration
 
-NOTE: It will take approximately 10 minutes to complete this section.
+NOTE: It will take approximately 15 minutes to complete this section.
 
 
 == Step-by-step Guide
 
-=== Generate 4KB files using smallfile
-
-NOTE: smallfile is a python-based distributed POSIX workload generator which can be used to quickly measure performance for a variety of metadata-intensive workloads across an entire cluster. It is an excellent tool to test file systems and I use it regularly to measure and demonstrate operation performance of Amazon EFS and Amazon FSx file systems. Learn more about smallfile from Ben England's github repo - link:https://github.com/distributed-system-analysis/smallfile[smallfile].
+=== Transfer tools
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
-image::iops-4k.gif[align="left", width=600]
+image::transfer-tools.gif[align="left", width=600]
 
 . Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* instance.
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
-. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
+. This instance was reloaded with approx. five thousand 1 MiB files totaling approx. 5 GB of data, all stored on an the attached EBS GP2 volume. This section will use different transfer tools to copy this dataset from EBS to EFS.
+. Run this command to validate the total size and count of files to be copied.
+[source,bash]
+----
+tree --du -h /ebs/data-1m
+
+----
+* The ouput should look similar to this:
+
+[source,bash]
+----
+    ├── [1.0M]  _ip-10-0-0-11_00_994_
+    ├── [1.0M]  _ip-10-0-0-11_00_995_
+    ├── [1.0M]  _ip-10-0-0-11_00_996_
+    ├── [1.0M]  _ip-10-0-0-11_00_997_
+    ├── [1.0M]  _ip-10-0-0-11_00_998_
+    └── [1.0M]  _ip-10-0-0-11_00_999_
+
+ 4.9G used in 1 directory, 5000 files
+----
+
+
+=== Rsync
+
+rsync is a fast, versatile, remote (and local) file-copying tool. Learn more about rsync - link:https://linux.die.net/man/1/rsync[https://linux.die.net/man/1/rsync].
+
+. *_Run_* the following rsync command in the browser-based SSH connection window to see how long it takes to copy the sample dataset from EBS to EFS.
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
-path=/efs/smallfile/${job_name}
-sudo mkdir -p ${path}
+instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+time rsync -r /ebs/data-1m/ /efs/rsync/${instance_id}
 
-threads=1
-file_size=4
-file_count=1024
-operation=create
-same_dir=Y
-
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path}
 ----
 +
-
-. How many seconds did it take to generate 1024 zero-byte files on the EFS file system?
+* How long did it take for the copy?
 * The ouput of the script should look similar to this:
 +
 [source,bash]
 ----
-host = ip-10-0-0-12,thr = 00,elapsed = 11.924979,files = 1024,records = 1024,status = ok
-total threads = 1
-total files = 1024
-total IOPS = 85
-total data =     0.004 GiB
-100.00% of requested files processed, warning threshold is  70.00
-elapsed time =    11.925
-files/sec = 85.870172
-IOPS = 85.870172
-MiB/sec = 0.335430
+real	5m59.205s
+user	0m19.346s
+sys	    0m6.019s
 ----
 +
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷359(seconds)=13.93MB/s
+* Why is rsync so slow?
+  * rync is a single-threaded copy tool that is very chatty over the network. These two attributes don't make rsync a good tool to use to copy data to and from an EFS file system because it doesn't take advantage of the distributed data storage design of EFS.
+
+
+=== Copy (cp)
+
+. *_Run_* the following cp command to see how long it takes to copy the sample dataset from EBS to EFS.
++
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+time cp -r /ebs/data-1m/* /efs/cp/${instance_id}
+
+----
++
+* How long did it take for the copy?
+* The ouput of the script should look similar to this:
++
+[source,bash]
+----
+real	4m34.786s
+user	0m0.048s
+sys	    0m4.584s
+----
++
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷274(seconds)=18.25MB/s
+* Why is so slow but faster than rsync?
+  * cp is also a single-threaded copy tool but isn't as chatty over the network as rsync, to throughput is faster.
+
+
+=== fpsync
+
+fpsync is a tool included in fpart and is a powerful shell script that wraps fpart and rsync to launch multiple transfer jobs in parallel. Learn more about fpsync - link:https://github.com/martymac/fpart#fpsync-[https://github.com/martymac/fpart#fpsync-].
+
+Fpart has been written by Ganael LAPLANCHE ganael.laplanche@martymac.org and is available under the BSD license (see COPYING for details).
+
+. *_Run_* the following fpsync command to see how long it takes to copy the sample dataset from EBS to EFS.
+* The first command sets the $threads variable to 4 threads per virtual cpu (vcpu). This will be used by the multi-threaded transfer tools.
++
+[source,bash]
+----
+threads=$(($(nproc --all) * 4))
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+time fpsync -n ${threads} -v /ebs/data-1m/ /efs/fpsync/${instance_id}
+
+----
++
+* How long did it take for the copy?
+* The ouput of the script should look similar to this:
++
+[source,bash]
+----
+real	4m34.786s
+user	0m0.048s
+sys	    0m4.584s
+----
++
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷274(seconds)=18.25MB/s
+* Why is so slow but faster than rsync?
+  * cp is also a single-threaded copy tool but isn't as chatty over the network as rsync, to throughput is faster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 . What was the IOPS?
 . How many threads were used?
 . Were the files generated in the same directory?
