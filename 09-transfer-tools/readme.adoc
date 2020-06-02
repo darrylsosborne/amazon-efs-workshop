@@ -53,7 +53,7 @@ tree --du -h /ebs/data-1m
 
 rsync is a fast, versatile, remote (and local) file-copying tool. Learn more about rsync - link:https://linux.die.net/man/1/rsync[https://linux.die.net/man/1/rsync].
 
-. *_Run_* the following rsync command in the browser-based SSH connection window to see how long it takes to copy the sample dataset from EBS to EFS.
+. *_Run_* the following rsync command in the browser-based SSH connection window to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
 +
 [source,bash]
 ----
@@ -70,17 +70,22 @@ time rsync -r /ebs/data-1m/ /efs/rsync/${instance_id}
 ----
 real	5m59.205s
 user	0m19.346s
-sys	    0m6.019s
+sys	0m6.019s
 ----
 +
-* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷359(seconds)=13.93MB/s
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷359(seconds)=13.93MB/s.
 * Why is rsync so slow?
   * rync is a single-threaded copy tool that is very chatty over the network. These two attributes don't make rsync a good tool to use to copy data to and from an EFS file system because it doesn't take advantage of the distributed data storage design of EFS.
+. Run this command to validate the total size and count of the files copied.
+[source,bash]
+----
+tree --du -h /efs/rsync/${instance_id}
 
+----
 
 === Copy (cp)
 
-. *_Run_* the following cp command to see how long it takes to copy the sample dataset from EBS to EFS.
+. *_Run_* the following cp command to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
 +
 [source,bash]
 ----
@@ -96,21 +101,26 @@ time cp -r /ebs/data-1m/* /efs/cp/${instance_id}
 ----
 real	4m34.786s
 user	0m0.048s
-sys	    0m4.584s
+sys	0m4.584s
 ----
 +
-* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷274(seconds)=18.25MB/s
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷274(seconds)=18.25MB/s.
 * Why is so slow but faster than rsync?
   * cp is also a single-threaded copy tool but isn't as chatty over the network as rsync, to throughput is faster.
+. Run this command to validate the total size and count of the files copied.
+[source,bash]
+----
+tree --du -h /efs/cp/${instance_id}
 
+----
 
 === fpsync
 
 fpsync is a tool included in fpart and is a powerful shell script that wraps fpart and rsync to launch multiple transfer jobs in parallel. Learn more about fpsync - link:https://github.com/martymac/fpart#fpsync-[https://github.com/martymac/fpart#fpsync-].
 
-Fpart has been written by Ganael LAPLANCHE ganael.laplanche@martymac.org and is available under the BSD license (see COPYING for details).
+Copyright (c) 2011-2020 Ganael LAPLANCHE <ganael.laplanche@martymac.org>
 
-. *_Run_* the following fpsync command to see how long it takes to copy the sample dataset from EBS to EFS.
+. *_Run_* the following fpsync command to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
 * The first command sets the $threads variable to 4 threads per virtual cpu (vcpu). This will be used by the multi-threaded transfer tools.
 +
 [source,bash]
@@ -126,175 +136,128 @@ time fpsync -n ${threads} -v /ebs/data-1m/ /efs/fpsync/${instance_id}
 +
 [source,bash]
 ----
-real	4m34.786s
-user	0m0.048s
-sys	    0m4.584s
+1591078644 ===> Job name: 1591078644-21223
+1591078645 ===> Analyzing filesystem...
+1591078646 ===> Waiting for sync jobs to complete...
+1591078808 <===   Parts done: 3/3 (100%), remaining: 0
+1591078808 <=== Time elapsed: 163s, remaining: ~0s (~54s/job)
+1591078808 <=== Fpsync completed without error.
+
+real	2m43.147s
+user	0m20.845s
+sys	0m7.651s
 ----
 +
-* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷274(seconds)=18.25MB/s
-* Why is so slow but faster than rsync?
-  * cp is also a single-threaded copy tool but isn't as chatty over the network as rsync, to throughput is faster.
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷163(seconds)=30.67MB/s.
+. Run this command to validate the total size and count of the files copied.
+[source,bash]
+----
+tree --du -h /efs/fpsync/${instance_id}
 
+----
 
+=== GNU Parallel + cp
 
+GNU Parallel is an amazing tool that parallelizes single-threaded commands. Learn more about GNU Parallel - link:https://www.gnu.org/software/parallel/[https://www.gnu.org/software/parallel/].
 
+O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
 
-
-
-
-
-
-
-
-
-
-. What was the IOPS?
-. How many threads were used?
-. Were the files generated in the same directory?
-* HINT: Look at the value of the variable "--same-dir".
-. *_Copy_* the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
+. *_Run_* the following cp + GNU parallel command to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
 +
-[cols="10,5"]
-|===
-| Parameter | Description
+[source,bash]
+----
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+time find /ebs/data-1m/. -type f | parallel --will-cite -j ${threads} cp {} /efs/parallelcp/${instance_id}
 
-| `--threads`
-a| Number of threads.
-
-| `--file-size`
-a| File size in KB.
-
-| `--file-count`
-a| Number of files per thread. For example, if you want to see how long it takes to generate 1024 files using 16 threads, change the --threads parameter to 16 and the --file-count parameter to 64 (1024÷16=64).
-
-| `--same-dir`
-a| Y will generate all files in the same direct - increasing inode contention. N will generate files in different directories, one for each thread - decreasing inode contention.
-
-|===
+----
 +
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-* The following table and graphs show the sample results of a few tests. Look how increasing the number of threads (increasing parallelism) and writing to different subdirectories (decreasing inode contention) impacts the IOPS and duration.
-
+* How long did it take for the copy?
+* The ouput of the script should look similar to this:
 +
-[cols="3,3,2,3,3,3,3",options="header"]
-|===
-|Threads |File size (KB) |File count (per thread) |File count (total) |Same directory |Duration (seconds) |IOPS
+[source,bash]
+----
+real	0m38.320s
+user	0m16.115s
+sys	0m19.323s
+----
++
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷38(seconds)=131.58MB/s.
+. Run this command to validate the total size and count of the files copied.
+[source,bash]
+----
+tree --du -h /efs/parallelcp/${instance_id}
 
-| 1
-| 4
-| 1024
-| 1024
-| Y
-| 11.369
-| 90.066095
+----
 
-| 2
-| 4
-| 512
-| 1024
-| Y
-| 5.820
-| 176.009550
+=== Fpart + GNU Parallel + cp
 
-| 4
-| 4
-| 256
-| 1024
-| Y
-| 5.883
-| 174.591562
+Fpart is a tool that helps sort file trees and pack them into pages or partitions. Learn more about fpart - link:https://github.com/martymac/fpart/[https://github.com/martymac/fpart].
 
-| 8
-| 4
-| 128
-| 1024
-| Y
-| 5.882
-| 175.117492
+Copyright (c) 2011-2020 Ganael LAPLANCHE <ganael.laplanche@martymac.org>
 
-| 16
-| 4
-| 64
-| 1024
-| Y
-| 5.629
-| 184.055531
+GNU Parallel is an amazing tool that parallelizes single-threaded commands. Learn more about GNU Parallel - link:https://www.gnu.org/software/parallel/[https://www.gnu.org/software/parallel/].
 
-| 32
-| 4
-| 32
-| 1024
-| Y
-| 5.641
-| 186.835993
+O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
 
-| 1
-| 4
-| 1024
-| 1024
-| N
-| 11.958
-| 85.633895
+. *_Run_* the following cp + GNU parallel command to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
++
+[source,bash]
+----
+cd /ebs/data-1m/
+time fpart -z -n 1 -o /home/ec2-user/fpart-files-to-transfer .
+time parallel --will-cite -j ${threads} --pipepart --round-robin --delay .1 --block 1M -a /home/ec2-user/fpart-files-to-transfer.0 sudo "cpio -dpmL /efs/parallelcpio/${instance_id}"
 
-| 2
-| 4
-| 512
-| 1024
-| N
-| 5.452
-| 188.621103
+----
++
+* How long did it take for the copy?
+* The ouput of the script should look similar to this:
++
+[source,bash]
+----
+319488 blocks
+319488 blocks
+319488 blocks
+319488 blocks
+319488 blocks
 
-| 4
-| 4
-| 256
-| 1024
-| N
-| 2.755
-| 372.936600
+real	0m33.113s
+user	0m7.065s
+sys	0m14.830s
+----
++
+* Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷33(seconds)=151.52MB/s.
+. Run this command to validate the total size and count of the files copied.
+[source,bash]
+----
+tree --du -h /efs/parallelcpio/${instance_id}
 
-| 8
-| 4
-| 128
-| 1024
-| N
-| 1.390
-| 746.051127
+----
 
-| 16
-| 4
-| 64
-| 1024
-| N
-| 0.819
-| 1281.790673
+. Compare the results from the tests above.  Is there a big difference? Why?
 
-| 32
-| 4
-| 32
-| 1024
-| N
-| 0.535
-| 1973.441341
+=== Test results
 
-|===
+The following table and graphs show the sample results of the IOR 2 GiB single shared file (SSF) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
---
-[.left]
-.IOPS
-image:iops-4kb-iops-graph.png[450, scaledwidth="75%"]
-[.left]
-.Duration
-image:iops-4kb-duration-graph.png[450, scaledwidth="75%"]
---
+
+|===========================================================================================
+| Tool                | Data size (MB) | File count | Duration (seconds) | Throughput (MB/s)
+| rsync               | 5000           | 5000       | 359.21             | 13.93
+| cp                  | 5000           | 5000       | 274.79             | 18.25
+| fpsync              | 5000           | 5000       | 163.14             | 30.67
+| parallel+cp         | 5000           | 5000       | 38.32              | 131.58
+| fpart+parallel+cpio | 5000           | 5000       | 33.11              | 151.52
+|===========================================================================================
+
+
+
+image::transfer-tool-graph.png[align="left"]
+
 
 == Next section
 
 Click the link below to go to the next section.
 
-image::iops-4k.png[link=../04-iops-4k/, align="left",width=420]
-
-
+image::transfer-tools.png[link=../09-transfer-tools, align="left",width=420]
 
 
