@@ -29,11 +29,13 @@ TIP: If the SSH connection has timed out, e.g. the session is unresponsive, clos
 +
 . This instance was reloaded with approx. five thousand 1 MiB files totaling approx. 5 GB of data, all stored on an the attached EBS GP2 volume. This section will use different transfer tools to copy this dataset from EBS to EFS.
 . Run this command to validate the total size and count of files to be copied.
++
 [source,bash]
 ----
 tree --du -h /ebs/data-1m
 
 ----
++
 * The ouput should look similar to this:
 
 [source,bash]
@@ -77,11 +79,13 @@ sys	0m6.019s
 * Why is rsync so slow?
   * rync is a single-threaded copy tool that is very chatty over the network. These two attributes don't make rsync a good tool to use to copy data to and from an EFS file system because it doesn't take advantage of the distributed data storage design of EFS.
 . Run this command to validate the total size and count of the files copied.
++
 [source,bash]
 ----
 tree --du -h /efs/rsync/${instance_id}
 
 ----
++
 
 === Copy (cp)
 
@@ -108,11 +112,13 @@ sys	0m4.584s
 * Why is so slow but faster than rsync?
   * cp is also a single-threaded copy tool but isn't as chatty over the network as rsync, to throughput is faster.
 . Run this command to validate the total size and count of the files copied.
++
 [source,bash]
 ----
 tree --du -h /efs/cp/${instance_id}
 
 ----
++
 
 === fpsync
 
@@ -150,11 +156,13 @@ sys	0m7.651s
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷163(seconds)=30.67MB/s.
 . Run this command to validate the total size and count of the files copied.
++
 [source,bash]
 ----
 tree --du -h /efs/fpsync/${instance_id}
 
 ----
++
 
 === GNU Parallel + cp
 
@@ -183,21 +191,23 @@ sys	0m19.323s
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷38(seconds)=131.58MB/s.
 . Run this command to validate the total size and count of the files copied.
++
 [source,bash]
 ----
 tree --du -h /efs/parallelcp/${instance_id}
 
 ----
++
 
 === Fpart + GNU Parallel + cp
 
 Fpart is a tool that helps sort file trees and pack them into pages or partitions. Learn more about fpart - link:https://github.com/martymac/fpart/[https://github.com/martymac/fpart].
 
-Copyright (c) 2011-2020 Ganael LAPLANCHE <ganael.laplanche@martymac.org>
+* Copyright (c) 2011-2020 Ganael LAPLANCHE <ganael.laplanche@martymac.org>
 
 GNU Parallel is an amazing tool that parallelizes single-threaded commands. Learn more about GNU Parallel - link:https://www.gnu.org/software/parallel/[https://www.gnu.org/software/parallel/].
 
-O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
+* O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
 
 . *_Run_* the following cp + GNU parallel command to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
 +
@@ -227,12 +237,13 @@ sys	0m14.830s
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷33(seconds)=151.52MB/s.
 . Run this command to validate the total size and count of the files copied.
++
 [source,bash]
 ----
 tree --du -h /efs/parallelcpio/${instance_id}
 
 ----
-
++
 . Compare the results from the tests above.  Is there a big difference? Why?
 
 === Test results
