@@ -25,9 +25,9 @@ image::throughput-ior.gif[align="left", width=600]
 . Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* - m5n.2xlarge instance.
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 0*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
-+
 
-=== IOR single shared file (SSF) write tests
+
+==== IOR single shared file (SSF) write tests
 
 IOR is a commonly used file system benchmarking application typically used to evaluate the performance of distributed and parallel file systems. You can read more about IOR here - link:http://wiki.lustre.org/IOR[http://wiki.lustre.org/IOR].
 
