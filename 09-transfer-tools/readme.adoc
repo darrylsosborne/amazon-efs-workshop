@@ -37,7 +37,7 @@ tree --du -h /ebs/data-1m
 ----
 +
 * The ouput should look similar to this:
-
++
 [source,bash]
 ----
     ├── [1.0M]  _ip-10-0-0-11_00_994_
