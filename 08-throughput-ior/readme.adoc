@@ -351,7 +351,7 @@ mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -364,7 +364,7 @@ mpirun --npernode 1 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 2048 -g -
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -377,7 +377,7 @@ mpirun --npernode 2 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -390,7 +390,7 @@ mpirun --npernode 4 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 512 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -403,7 +403,7 @@ mpirun --npernode 8 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 256 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -416,7 +416,7 @@ mpirun --npernode 16 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 128 -g -
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -429,7 +429,7 @@ mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v
 [source,bash]
 ----
 sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
-mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -r -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v -r -i 1 -u -F -D 0 -o /efs/ior/ior.bin
 
 ----
 +
@@ -439,52 +439,56 @@ mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v
 
 . Compare the results from the tests above.  Is there a big difference? Why?
 
-* The following table and graphs show the sample results of these tests. Look how increasing the size of the IO (reducing sync operations) and increasing the number of threads (increasing parallelism) impacts the throughput and duration.
+The following table and graphs show the sample results of the IOR 2 GiB single shared file (SSF) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
 +
+|=========================================================================
+| Operation | Threads | File count| Throughput (MB/s) | Duration (seconds)
+| Write     | 1       | 1         | 25.34             | 84.74
+| Write     | 2       | 1         | 34.93             | 61.48
+| Write     | 4       | 1         | 87.78             | 24.46
+| Write     | 8       | 1         | 150.79            | 14.24
+| Write     | 16      | 1         | 198.36            | 10.83
+| Write     | 32      | 1         | 208.32            | 10.31
+| Write     | 64      | 1         | 221.82            | 9.68
+| Read      | 1       | 1         | 67.92             | 31.62
+| Read      | 2       | 1         | 104.04            | 20.64
+| Read      | 4       | 1         | 193.34            | 11.11
+| Read      | 8       | 1         | 402.23            | 5.34
+| Read      | 16      | 1         | 421.85            | 5.09
+| Read      | 32      | 1         | 422.93            | 5.08
+| Read      | 64      | 1         | 420.38            | 5.11
+|=========================================================================
++
+|===
+a|image::ior-ssf-throughput.png[align="left", width=420] a|image::ior-ssf-duration.png[align="left", width=420]
+|===
 
-|==============================================================================================
-| Operation | Threads | File count | Directory per file | Duration (seconds) | Throughput (MB/s)
-| Write     | 1       | 1          | N                  | 84.74              | 25.34
-| Write     | 1       | 2          | N                  | 61.48              | 34.93
-| Write     | 1       | 4          | N                  | 24.46              | 87.78
-| Write     | 1       | 8          | N                  | 14.24              | 150.79
-| Write     | 1       | 16         | N                  | 10.83              | 198.36
-| Write     | 1       | 32         | N                  | 10.31              | 208.32
-| Write     | 1       | 64         | N                  | 9.68               | 221.82
-| Write     | 1       | 1          | N                  | 85.36              | 25.16
-| Write     | 2       | 2          | N                  | 43.45              | 49.43
-| Write     | 4       | 4          | N                  | 22.27              | 96.44
-| Write     | 8       | 8          | N                  | 11.80              | 181.93
-| Write     | 16      | 16         | N                  | 8.93               | 240.42
-| Write     | 32      | 32         | N                  | 7.87               | 272.83
-| Write     | 64      | 64         | N                  | 8.06               | 266.46
-| Write     | 1       | 1          | Y                  | 84.69              | 25.36
-| Write     | 2       | 2          | Y                  | 42.65              | 50.35
-| Write     | 4       | 4          | Y                  | 22.05              | 97.37
-| Write     | 8       | 8          | Y                  | 12.24              | 175.41
-| Write     | 16      | 16         | Y                  | 8.16               | 263.02
-| Write     | 32      | 32         | Y                  | 7.69               | 279.16
-| Write     | 64      | 64         | Y                  | 7.64               | 281.12
-| Read      | 1       | 1          | Y                  | 34.63              | 62.01
-| Read      | 2       | 2          | Y                  | 17.03              | 126.09
-| Read      | 4       | 4          | Y                  | 8.95               | 239.82
-| Read      | 8       | 8          | Y                  | 5.13               | 418.44
-| Read      | 16      | 16         | Y                  | 5.16               | 415.94
-| Read      | 32      | 32         | Y                  | 5.16               | 415.96
-| Read      | 64      | 64         | Y                  | 5.21               | 412.06
+The following table and graphs show the sample results of the IOR 2 GiB file per process (FPP) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
-|==============================================================================================
-
---
-[.left]
-.IOPS
-image::throughput-dd-throughput-graph.png[450, scaledwidth="75%"]
-[.left]
-.Duration
-image::throughput-dd-duration-graph.png[450, scaledwidth="75%"]
---
-
++
+|==========================================================================
+| Operation | Threads | File count | Throughput (MB/s) | Duration (seconds)
+| Write     | 1       | 1          | 25.36             | 84.69
+| Write     | 2       | 2          | 50.35             | 42.65
+| Write     | 4       | 4          | 97.37             | 22.05
+| Write     | 8       | 8          | 175.41            | 12.24
+| Write     | 16      | 16         | 263.02            | 8.16
+| Write     | 32      | 32         | 279.16            | 7.69
+| Write     | 64      | 64         | 281.12            | 7.64
+| Read      | 1       | 1          | 62.01             | 34.63
+| Read      | 2       | 2          | 126.09            | 17.03
+| Read      | 4       | 4          | 239.82            | 8.95
+| Read      | 8       | 8          | 418.44            | 5.13
+| Read      | 16      | 16         | 415.94            | 5.16
+| Read      | 32      | 32         | 415.96            | 5.16
+| Read      | 64      | 64         | 412.06            | 5.21
+|==========================================================================
++
+|===
+a|image::ior-fpp-throughput.png[align="left", width=420] a|image::ior-fpp-duration.png[align="left", width=420]
+|=
++
 
 == Next section
 
