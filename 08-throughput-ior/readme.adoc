@@ -441,7 +441,7 @@ mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v
 
 The following table and graphs show the sample results of the IOR 2 GiB single shared file (SSF) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
-+
+
 |=========================================================================
 | Operation | Threads | File count| Throughput (MB/s) | Duration (seconds)
 | Write     | 1       | 1         | 25.34             | 84.74
@@ -459,14 +459,15 @@ The following table and graphs show the sample results of the IOR 2 GiB single s
 | Read      | 32      | 1         | 422.93            | 5.08
 | Read      | 64      | 1         | 420.38            | 5.11
 |=========================================================================
-+
+
+
 |===
 a|image::ior-ssf-throughput.png[align="left", width=420] a|image::ior-ssf-duration.png[align="left", width=420]
 |===
 
 The following table and graphs show the sample results of the IOR 2 GiB file per process (FPP) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
-+
+
 |==========================================================================
 | Operation | Threads | File count | Throughput (MB/s) | Duration (seconds)
 | Write     | 1       | 1          | 25.36             | 84.69
@@ -484,11 +485,12 @@ The following table and graphs show the sample results of the IOR 2 GiB file per
 | Read      | 32      | 32         | 415.96            | 5.16
 | Read      | 64      | 64         | 412.06            | 5.21
 |==========================================================================
-+
+
+
 |===
 a|image::ior-fpp-throughput.png[align="left", width=420] a|image::ior-fpp-duration.png[align="left", width=420]
 |=
-+
+
 
 == Next section
 
