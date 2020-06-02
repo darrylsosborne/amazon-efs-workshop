@@ -439,6 +439,8 @@ mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 32 -g -v
 
 . Compare the results from the tests above.  Is there a big difference? Why?
 
+=== Test results
+
 The following table and graphs show the sample results of the IOR 2 GiB single shared file (SSF) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
 
@@ -489,7 +491,7 @@ The following table and graphs show the sample results of the IOR 2 GiB file per
 
 |===
 a|image::ior-fpp-throughput.png[align="left", width=420] a|image::ior-fpp-duration.png[align="left", width=420]
-|=
+|===
 
 
 == Next section
