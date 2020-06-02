@@ -237,7 +237,7 @@ tree --du -h /efs/parallelcpio/${instance_id}
 
 === Test results
 
-The following table and graphs show the sample results of the IOR 2 GiB single shared file (SSF) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
+The following table and graph show the sample results of using different transfer tools to copy 5000 1MB files (5000 MB total size) from an EBS volume to an EFS file system. Look how choosing the most effecient transfer tool impacts duration and throughput.
 
 
 |===========================================================================================
