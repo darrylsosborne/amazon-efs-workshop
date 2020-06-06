@@ -62,7 +62,7 @@ nload -u M
 * t2 instances have variable network performance and are able achieve high levels of burst network performance for short period of time followed by consistent baseline network performance.
 . Close the browser-based SSH connection window of the *EFS Workshop Linux Instance 0* - t2.micro instance.
 
-. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 1* - m5.large instance.
+. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 1* - m4.large instance.
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 0*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
