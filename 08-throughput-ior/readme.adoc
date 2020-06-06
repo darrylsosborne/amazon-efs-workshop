@@ -498,7 +498,7 @@ The following table and graphs show the sample results of the IOR 2 GiB file per
 |==========================================================================
 
 
-
+--
 {empty} +
 {empty} +
 [.left]
@@ -509,21 +509,7 @@ image::ior-fpp-throughput.png[450, scaledwidth="75%"]
 [.left]
 .Duration
 image::ior-fpp-duration.png[450, scaledwidth="75%"]
-
-
 --
-{empty} +
-{empty} +
-[.left]
-.IOPS
-image::throughput-dd-throughput-graph.png[450, scaledwidth="75%"]
-{empty} +
-{empty} +
-[.left]
-.Duration
-image::throughput-dd-duration-graph.png[450, scaledwidth="75%"]
---
-
 
 
 == Next section

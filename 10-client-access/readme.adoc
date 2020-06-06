@@ -1,4 +1,4 @@
-= IOPS 4KB Files
+= Client access
 :toc:
 :icons:
 :linkattrs:
@@ -7,7 +7,7 @@
 
 == Summary
 
-This section will demonstrate how parallelism increases achievable IOPS of an EFS file system.
+This section will demonstrate how control client access using access points.
 
 
 == Duration
@@ -23,11 +23,11 @@ NOTE: smallfile is a python-based distributed POSIX workload generator which can
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
-image::iops-4k.gif[align="left", width=600]
+image::client-access.gif[align="left", width=600]
 
-. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* instance.
+. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 1* instance.
 +
-TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 1*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
 . *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
 +
