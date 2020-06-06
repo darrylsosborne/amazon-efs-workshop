@@ -57,8 +57,15 @@ ll /efs
 +
 [source,bash]
 ----
-Update this after running through the entire Workshop
-
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 cp
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 02:58 dd
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 fpsync
+drwxr-xr-x  2 ec2-user ec2-user   6144 Jun  1 00:22 ior
+drwxr-xr-x  6 ec2-user ec2-user 227328 Jun  1 06:31 parallelcp
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 parallelcpio
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 rsync
+drwxr-xr-x 24 ec2-user ec2-user   6144 May 31 06:02 smallfile
+drwxrwxr-x 12 ec2-user ec2-user   6144 Jun  1 01:52 touch
 ----
 +
 . Make a note of all the directories under the mount point */efs*.
@@ -66,28 +73,13 @@ Update this after running through the entire Workshop
 +
 [source,bash]
 ----
-sudo mkdir -p /efs/client/touch1/{1..32}
+mkdir -p /efs/client/touch1/{1..32}
 sudo chown ec2-user:ec2-user /efs/client/touch1/{1..32}
-time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch1/{}/test1.1{1..32}
+time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch1/{}/test1.{1..32}
 
 ----
 +
 . List the contents of the mount point. *_Run_* the following script.
-+
-[source,bash]
-----
-ll /efs
-
-----
-+
-* The output of the script should look similar to this:
-+
-[source,bash]
-----
-Get the list of all subdirectories created.
-----
-+
-. List the subdirectories you created earlier. *_Run_* the following script.
 +
 [source,bash]
 ----
@@ -99,12 +91,8 @@ ll /efs/client
 +
 [source,bash]
 ----
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 5
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 6
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 7
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 8
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 9
-
+total 4
+drwxr-xr-x 34 root root 6144 Jun  1 14:45 touch1
 ----
 +
 . List directories, files, including users and groups. *_Run_* the following script.
@@ -115,14 +103,13 @@ tree --du -hug /efs/client/touch1
 
 ----
 +
-* The output of the script should look similar to this:
+* The end of the output should look similar to this:
 +
 [source,bash]
 ----
-    ├── [ec2-user ec2-user    0]  test1.26
-    ├── [ec2-user ec2-user    0]  test1.27
-    ├── [ec2-user ec2-user    0]  test1.28
-    └── [ec2-user ec2-user    0]  test1.29
+    ├── [ec2-user ec2-user    0]  test1.7
+    ├── [ec2-user ec2-user    0]  test1.8
+    └── [ec2-user ec2-user    0]  test1.9
 
  198K used in 32 directories, 1024 files
 ----
@@ -148,17 +135,16 @@ sudo umount /efs
 . Complete the *New access points* form using the following table.
 
 +
-[cols="10,10,10,10,10,10,10,10,10"]
+[cols="10,10,10,10,10,10,10,10"]
 |===
 | Name | User ID | Group ID | Secondary Group IDs | Path | Owner User ID | Owner Group ID | Permissions
-
 | client
-| 1001
-| 1001
+| 1000
+| 1000
 |
 | /client
-| 1001
-| 1001
+| 1000
+| 1000
 | 755
 |===
 . *_Click_* *Save access points*.
@@ -193,9 +179,14 @@ sudo mount -t efs fs-0123abcd /efs
 ----
 . Did the mount command succeed? Why not?
 . The output of the command should look similar to this:
-* mount.nfs4: access denied by server while mounting fs-d4d65d57.efs.us-east-1.amazonaws.com:/
++
+[source,bash]
+----
+mount.nfs4: access denied by server while mounting fs-d4d65d57.efs.us-east-1.amazonaws.com:/
+----
++
 . What must you do to the mount command to successfully mount the file system?
-. Change the mount command to use an encrypted connection. *_Run_* the following script. Replace the file system ID place holder <file-system-id> with the file system ID you copied in the earlier step.
+. Change the mount command to use an encrypted connection by inserting *-o tls*. *_Run_* the following script. Replace the file system ID place holder <file-system-id> with the file system ID you copied in the earlier step.
 +
 [source,bash]
 ----
@@ -211,31 +202,68 @@ sudo mount -t efs -o tls fs-0123abcd /efs
 
 ----
 . Did the mount command succeed?
-. Verify you can access the file system. List directories, files, including users and groups. *_Run_* the following script.
+. Verify the file system successfully mounted. *_Run_* the following script.
 +
 [source,bash]
 ----
-tree --du -hug /efs/client/touch1
+mount -t nfs4
 
 ----
 +
-* The output of the script should look similar to this:
+* The output should look similar to this:
 +
 [source,bash]
 ----
-    ├── [ec2-user ec2-user    0]  test1.26
-    ├── [ec2-user ec2-user    0]  test1.27
-    ├── [ec2-user ec2-user    0]  test1.28
-    └── [ec2-user ec2-user    0]  test1.29
+127.0.0.1:/ on /efs type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,noresvport,proto=tcp,port=20279,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1,local_lock=none,addr=127.0.0.1)
++
+. Notice the DNS name of the file system is no longer in the mount output. The file system DNS name is replaced with the IP address of the loopback or localhost. To help identify the DNS name of a file system mounted with an encrypted connection, query the mount.log file and file the last successful mount operation. *_Run_* the following script.
++
+[source,bash]
+----
+grep -E "Successfully mounted.\*/efs" /var/log/amazon/efs/mount.log | tail -1
 
- 198K used in 32 directories, 1024 files
 ----
 +
-Create more zero-byte files. *_Run_* the following script.
+. The output of the command should look similar to this:
 +
 [source,bash]
 ----
-time seq 1 32 | parallel --will-cite -j 32 sudo touch /efs/client/touch1/{}/test1.2{1..32}
+2020-06-01 14:55:46,279 - INFO - Successfully mounted fs-0123abcd.efs.us-east-1.amazonaws.com at /efs
+----
++
+. Verify you can access the file system. List the file system objects under the root of the mount point. *_Run_* the following script.
++
+[source,bash]
+----
+ll /efs
+
+----
++
+. What directories are under the root of the file system in the mount point */efs*?
+* The output of the command should look similar to this:
++
+[source,bash]
+----
+total 256
+drwxrwxr-x  3 ec2-user ec2-user   6144 Jun  1 15:25 client
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 cp
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 02:58 dd
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 fpsync
+drwxr-xr-x  2 ec2-user ec2-user   6144 Jun  2 00:22 ior
+drwxr-xr-x  6 ec2-user ec2-user 227328 Jun  2 06:31 parallelcp
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 parallelcpio
+drwxr-xr-x  6 ec2-user ec2-user   6144 Jun  1 01:52 rsync
+drwxr-xr-x 24 ec2-user ec2-user   6144 May 31 06:02 smallfile
+drwxrwxr-x 12 ec2-user ec2-user   6144 Jun  1 01:52 touch
+----
++
+
+. Create more zero-byte files. *_Run_* the following script.
++
+[source,bash]
+----
+mkdir -p /efs/client/touch2/{1..32}
+time seq 1 32 | parallel --will-cite -j 32 sudo touch /efs/client/touch2/{}/test1.{1..32}
 
 ----
 +
@@ -244,7 +272,7 @@ time seq 1 32 | parallel --will-cite -j 32 sudo touch /efs/client/touch1/{}/test
 +
 [source,bash]
 ----
-time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch1/{}/test1.2{1..32}
+time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch2/{}/test1.{1..32}
 
 ----
 +
@@ -253,7 +281,7 @@ time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch1/{}/test1.2{1
 +
 [source,bash]
 ----
-sudo tree --du -hug /efs/client/touch1
+sudo tree --du -hug /efs/client/touch2
 
 ----
 +
@@ -261,12 +289,12 @@ sudo tree --du -hug /efs/client/touch1
 +
 [source,bash]
 ----
-    ├── [ec2-user ec2-user    0]  test1.26
-    ├── [ec2-user ec2-user    0]  test1.27
-    ├── [ec2-user ec2-user    0]  test1.28
-    └── [ec2-user ec2-user    0]  test1.29
+    ├── [ec2-user ec2-user    0]  test1.6
+    ├── [ec2-user ec2-user    0]  test1.7
+    ├── [ec2-user ec2-user    0]  test1.8
+    └── [ec2-user ec2-user    0]  test1.9
 
- 198K used in 32 directories, 2048 files
+ 198K used in 32 directories, 1024 files
 ----
 +
 . Unmount the file system. *_Run_* the following script.
@@ -309,25 +337,23 @@ ll /efs
 
 ----
 +
-* The output of the script should look similar to this:
+* The output should look similar to this:
 +
 [source,bash]
 ----
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 6
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 7
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 8
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 9
+total 8
+drwxrwxr-x 34 ec2-user ec2-user 6144 Jun  1 15:25 touch1
+drwxrwxr-x 34 ec2-user ec2-user 6144 Jun  1 15:31 touch2
 ----
 +
 . What happened to all the other directories that were under */efs*?
 *Earlier you created an access point with the path */client*, so mount points for all connections using that access point will have the root */client*. These connections will only be able to access file system contents within */client*.
-. Create a new directory called */touch2* and some subdirectories with zero-byte files. *_Run_* the following script.
+. Create a new directory called */touch3* and some subdirectories with zero-byte files. *_Run_* the following script.
 +
 [source,bash]
 ----
-cd /efs
-sudo mkdir -p /efs/touch2
-time seq 1 32 | parallel --will-cite -j 32 touch /efs/touch2/{}/test1.1{1..32}
+sudo mkdir -p /efs/touch3/{1..32}
+time seq 1 32 | parallel --will-cite -j 32 sudo touch /efs/touch3/{}/test1.{1..32}
 
 ----
 +
@@ -343,14 +369,17 @@ ll /efs
 +
 [source,bash]
 ----
-Get the list of all subdirectories created.
+total 12
+drwxrwxr-x 34 ec2-user ec2-user 6144 Jun  1 15:25 touch1
+drwxrwxr-x 34 ec2-user ec2-user 6144 Jun  1 15:31 touch2
+drwxr-xr-x 34 ec2-user ec2-user 6144 Jun  1 15:43 touch3
 ----
 +
-. List the subdirectories you created earlier. *_Run_* the following script.
+. List directories, files, including users and groups in the *touch3* directory. *_Run_* the following script.
 +
 [source,bash]
 ----
-ll /efs/touch2
+tree --du -hug /efs/touch3
 
 ----
 +
@@ -358,234 +387,23 @@ ll /efs/touch2
 +
 [source,bash]
 ----
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 5
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 6
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 7
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 8
-drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 9
+    ├── [ec2-user ec2-user    0]  test1.6
+    ├── [ec2-user ec2-user    0]  test1.7
+    ├── [ec2-user ec2-user    0]  test1.8
+    └── [ec2-user ec2-user    0]  test1.9
 
+ 198K used in 32 directories, 1024 files
 ----
 +
+. Who is the user owner and group owner of all these directories and files?
+* Notice the owner of all directories and files created in the */touch3* directory is *ec2-user*. Because this instance is using the access point that is mapped to *User ID: 1000 (ec2-user)* and *Groupd ID: 1000 (ec2-user)*, all file system objects will be created as ec2-user, even those created as *sudo*.
 
-
-
-
-
-
-*
-.
-
-| `--file-size`
-a| File size in KB.
-
-| `--file-count`
-a| Number of files per thread. For example, if you want to see how long it takes to generate 1024 files using 16 threads, change the --threads parameter to 16 and the --file-count parameter to 64 (1024÷16=64).
-
-| `--same-dir`
-a| Y will generate all files in the same direct - increasing inode contention. N will generate files in different directories, one for each thread - decreasing inode contention.
-
-|===
-+
-
-
-
-
-
-+
-TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 1*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
-+
-. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
-+
-[source,bash]
-----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
-path=/efs/smallfile/${job_name}
-sudo mkdir -p ${path}
-
-threads=1
-file_size=4
-file_count=1024
-operation=create
-same_dir=Y
-
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path}
-----
-+
-
-. How many seconds did it take to generate 1024 zero-byte files on the EFS file system?
-* The ouput of the script should look similar to this:
-+
-[source,bash]
-----
-host = ip-10-0-0-12,thr = 00,elapsed = 11.924979,files = 1024,records = 1024,status = ok
-total threads = 1
-total files = 1024
-total IOPS = 85
-total data =     0.004 GiB
-100.00% of requested files processed, warning threshold is  70.00
-elapsed time =    11.925
-files/sec = 85.870172
-IOPS = 85.870172
-MiB/sec = 0.335430
-----
-+
-. What was the IOPS?
-. How many threads were used?
-. Were the files generated in the same directory?
-* HINT: Look at the value of the variable "--same-dir".
-. *_Copy_* the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
-+
-[cols="10,5"]
-|===
-| Parameter | Description
-
-| `--threads`
-a| Number of threads.
-
-| `--file-size`
-a| File size in KB.
-
-| `--file-count`
-a| Number of files per thread. For example, if you want to see how long it takes to generate 1024 files using 16 threads, change the --threads parameter to 16 and the --file-count parameter to 64 (1024÷16=64).
-
-| `--same-dir`
-a| Y will generate all files in the same direct - increasing inode contention. N will generate files in different directories, one for each thread - decreasing inode contention.
-
-|===
-+
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-* The following table and graphs show the sample results of a few tests. Look how increasing the number of threads (increasing parallelism) and writing to different subdirectories (decreasing inode contention) impacts the IOPS and duration.
-
-+
-[cols="3,3,2,3,3,3,3",options="header"]
-|===
-|Threads |File size (KB) |File count (per thread) |File count (total) |Same directory |Duration (seconds) |IOPS
-
-| 1
-| 4
-| 1024
-| 1024
-| Y
-| 11.369
-| 90.066095
-
-| 2
-| 4
-| 512
-| 1024
-| Y
-| 5.820
-| 176.009550
-
-| 4
-| 4
-| 256
-| 1024
-| Y
-| 5.883
-| 174.591562
-
-| 8
-| 4
-| 128
-| 1024
-| Y
-| 5.882
-| 175.117492
-
-| 16
-| 4
-| 64
-| 1024
-| Y
-| 5.629
-| 184.055531
-
-| 32
-| 4
-| 32
-| 1024
-| Y
-| 5.641
-| 186.835993
-
-| 1
-| 4
-| 1024
-| 1024
-| N
-| 11.958
-| 85.633895
-
-| 2
-| 4
-| 512
-| 1024
-| N
-| 5.452
-| 188.621103
-
-| 4
-| 4
-| 256
-| 1024
-| N
-| 2.755
-| 372.936600
-
-| 8
-| 4
-| 128
-| 1024
-| N
-| 1.390
-| 746.051127
-
-| 16
-| 4
-| 64
-| 1024
-| N
-| 0.819
-| 1281.790673
-
-| 32
-| 4
-| 32
-| 1024
-| N
-| 0.535
-| 1973.441341
-
-|===
-
---
-[.left]
-.IOPS
-image:iops-4kb-iops-graph.png[450, scaledwidth="75%"]
-[.left]
-.Duration
-image:iops-4kb-duration-graph.png[450, scaledwidth="75%"]
---
 
 == Next section
 
 Click the link below to go to the next section.
 
-image::iops-4k.png[link=../04-iops-4k/, align="left",width=420]
+image::monitor-performance.png[link=../11-monitor-performance/, align="left",width=420]
 
 
 
