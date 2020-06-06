@@ -192,10 +192,14 @@ time seq 1 16 | parallel --will-cite -j 16 dd if=/dev/zero of=/efs/dd/2G-dd-$(da
 |==============================================================================================
 
 --
+{empty} +
+{empty} +
 [.left]
 .IOPS
 image::throughput-dd-throughput-graph.png[450, scaledwidth="75%"]
 [.left]
+{empty} +
+{empty} +
 .Duration
 image::throughput-dd-duration-graph.png[450, scaledwidth="75%"]
 --
@@ -205,7 +209,7 @@ image::throughput-dd-duration-graph.png[450, scaledwidth="75%"]
 
 Click the link below to go to the next section.
 
-image::throughput-dd.png[link=../08-throughput-ior, align="left",width=420]
+image::throughput-ior.png[link=../08-throughput-ior, align="left",width=420]
 
 
 
