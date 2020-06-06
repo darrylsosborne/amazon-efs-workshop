@@ -17,15 +17,380 @@ NOTE: It will take approximately 10 minutes to complete this section.
 
 == Step-by-step Guide
 
-=== Generate 4KB files using smallfile
-
-NOTE: smallfile is a python-based distributed POSIX workload generator which can be used to quickly measure performance for a variety of metadata-intensive workloads across an entire cluster. It is an excellent tool to test file systems and I use it regularly to measure and demonstrate operation performance of Amazon EFS and Amazon FSx file systems. Learn more about smallfile from Ben England's github repo - link:https://github.com/distributed-system-analysis/smallfile[smallfile].
+=== Control client access using access points
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
 image::client-access.gif[align="left", width=600]
 
 . Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 1* instance.
++
+TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 1*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
++
+. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how the Amazon EFS file system has been mounted. The rest of the bash commands below will also be *_run_* in the same browser-based SSH connection window.
++
+[source,bash]
+----
+mount -t nfs4
+
+----
++
+. What is the mount point of the EFS file system?
+* The output of the command should look similar to this:
++
+[source,bash]
+----
+fs-01234abc.efs.us-east-1.amazonaws.com:/ on /efs type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,noresvport,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.0.0.12,local_lock=none,addr=10.0.1.176,_netdev)
+----
++
+* Answer: /efs
+. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to get a list of all files and directories under the mount point */efs*. The rest of the bash commands below will also be *_run_* in the same browser-based SSH connection window.
++
+[source,bash]
+----
+ll /efs
+
+----
++
+. What directories are under the root of the file system in the mount point */efs*?
+* The output of the command should look similar to this:
++
+[source,bash]
+----
+Update this after running through the entire Workshop
+
+----
++
+. Make a note of all the directories under the mount point */efs*.
+. Create a new directory called *client* and some subdirectories with zero-byte files. *_Run_* the following script.
++
+[source,bash]
+----
+sudo mkdir -p /efs/client/touch1/{1..32}
+sudo chown ec2-user:ec2-user /efs/client/touch1/{1..32}
+time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch1/{}/test1.1{1..32}
+
+----
++
+. List the contents of the mount point. *_Run_* the following script.
++
+[source,bash]
+----
+ll /efs
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+Get the list of all subdirectories created.
+----
++
+. List the subdirectories you created earlier. *_Run_* the following script.
++
+[source,bash]
+----
+ll /efs/client
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 5
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 6
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 7
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 8
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 9
+
+----
++
+. List directories, files, including users and groups. *_Run_* the following script.
++
+[source,bash]
+----
+tree --du -hug /efs/client/touch1
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+    ├── [ec2-user ec2-user    0]  test1.26
+    ├── [ec2-user ec2-user    0]  test1.27
+    ├── [ec2-user ec2-user    0]  test1.28
+    └── [ec2-user ec2-user    0]  test1.29
+
+ 198K used in 32 directories, 1024 files
+----
++
+. Unmount the file system. *_Run_* the following script.
++
+[source,bash]
+----
+cd
+sudo umount /efs
+
+----
++
+. Return to the Amazon EFS console.
+. *_Click_* the radio button next to the file system.
+. *_Click_* *Actions* >> *Manage client access* from the File systems tool bar.
+. Create a simple file system policy. From the *File system policy* section, *_click_* the check boxes of the following policy statements:
+* Disable root access by default
+* Enforce in-transit encryption for all clients
+. *_Click_* *Set policy*.
+. *_Click_* *Save policy*.
+. Create an access point and configure the POSIX identity and root directory for all connections using this access point. From the *Access points* section, *_click_* *+ Add access point* at the bottom left of the window.
+. Complete the *New access points* form using the following table.
+
++
+[cols="10,10,10,10,10,10,10,10,10"]
+|===
+| Name | User ID | Group ID | Secondary Group IDs | Path | Owner User ID | Owner Group ID | Permissions
+
+| client
+| 1001
+| 1001
+|
+| /client
+| 1001
+| 1001
+| 755
+|===
+. *_Click_* *Save access points*.
+. *_Click_* the browser's back button to return to the Amazon EFS console.
+. *_Copy_* the *File system ID*.
++
+* The file system ID should look similar to this:
++
+[source,bash]
+----
+fs-0123abcd
+----
+
+
+=== Validate file system policies and access point
+
+. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 1* instance.
+. See if you can mount the file system using an unencrypted connection. *_Run_* the following script. Replace the file system ID place holder <file-system-id> with the file system ID you copied in the earlier step.
++
+[source,bash]
+----
+sudo mount -t efs <file-system-id> /efs
+
+----
++
+* The actual command should look similar to this:
++
+[source,bash]
+----
+sudo mount -t efs fs-0123abcd /efs
+
+----
+. Did the mount command succeed? Why not?
+. The output of the command should look similar to this:
+* mount.nfs4: access denied by server while mounting fs-d4d65d57.efs.us-east-1.amazonaws.com:/
+. What must you do to the mount command to successfully mount the file system?
+. Change the mount command to use an encrypted connection. *_Run_* the following script. Replace the file system ID place holder <file-system-id> with the file system ID you copied in the earlier step.
++
+[source,bash]
+----
+sudo mount -t efs -o tls <file-system-id> /efs
+
+----
++
+* The actual command should look similar to this:
++
+[source,bash]
+----
+sudo mount -t efs -o tls fs-0123abcd /efs
+
+----
+. Did the mount command succeed?
+. Verify you can access the file system. List directories, files, including users and groups. *_Run_* the following script.
++
+[source,bash]
+----
+tree --du -hug /efs/client/touch1
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+    ├── [ec2-user ec2-user    0]  test1.26
+    ├── [ec2-user ec2-user    0]  test1.27
+    ├── [ec2-user ec2-user    0]  test1.28
+    └── [ec2-user ec2-user    0]  test1.29
+
+ 198K used in 32 directories, 1024 files
+----
++
+Create more zero-byte files. *_Run_* the following script.
++
+[source,bash]
+----
+time seq 1 32 | parallel --will-cite -j 32 sudo touch /efs/client/touch1/{}/test1.2{1..32}
+
+----
++
+. Did parallel touch command succeed? Why not?
+. Rerun the script by but remove *sudo*. *_Run_* the following script.
++
+[source,bash]
+----
+time seq 1 32 | parallel --will-cite -j 32 touch /efs/client/touch1/{}/test1.2{1..32}
+
+----
++
+. Did parallel touch command succeed?
+. List directories, files, including users and groups. *_Run_* the following script.
++
+[source,bash]
+----
+sudo tree --du -hug /efs/client/touch1
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+    ├── [ec2-user ec2-user    0]  test1.26
+    ├── [ec2-user ec2-user    0]  test1.27
+    ├── [ec2-user ec2-user    0]  test1.28
+    └── [ec2-user ec2-user    0]  test1.29
+
+ 198K used in 32 directories, 2048 files
+----
++
+. Unmount the file system. *_Run_* the following script.
++
+[source,bash]
+----
+cd
+sudo umount /efs
+
+----
++
+
+. Return to the Amazon EFS console.
+. *_Click_* the radio button next to the file system.
+. *_Click_* *Actions* >> *Manage client access* from the File systems tool bar.
+. From the *Access points* section, *_copy_* the *Access point ID*. It should look similar to this:
+* fsap-0d3c794aa17bcc98d
+
+. Run the mount command to use an encrypted connection and the access point. *_Run_* the following script. Replace the file system ID place holder <file-system-id> with your file system ID and the access point place holder <access-point> your copied earlier.
++
+[source,bash]
+----
+sudo mount -t efs -o tls,accesspoint=<access-point> <file-system-id> /efs
+
+----
++
+* The actual command should look similar to this:
++
+[source,bash]
+----
+sudo mount -t efs -o tls,accesspoint=fsap-0123456789abdcef0 fs-0123abcd /efs
+
+----
++
+. List the contents of the mount point. *_Run_* the following script.
++
+[source,bash]
+----
+ll /efs
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 6
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 7
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 8
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  1 07:16 9
+----
++
+. What happened to all the other directories that were under */efs*?
+*Earlier you created an access point with the path */client*, so mount points for all connections using that access point will have the root */client*. These connections will only be able to access file system contents within */client*.
+. Create a new directory called */touch2* and some subdirectories with zero-byte files. *_Run_* the following script.
++
+[source,bash]
+----
+cd /efs
+sudo mkdir -p /efs/touch2
+time seq 1 32 | parallel --will-cite -j 32 touch /efs/touch2/{}/test1.1{1..32}
+
+----
++
+. List the contents of the mount point. *_Run_* the following script.
++
+[source,bash]
+----
+ll /efs
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+Get the list of all subdirectories created.
+----
++
+. List the subdirectories you created earlier. *_Run_* the following script.
++
+[source,bash]
+----
+ll /efs/touch2
+
+----
++
+* The output of the script should look similar to this:
++
+[source,bash]
+----
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 5
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 6
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 7
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 8
+drwxr-xr-x 2 ec2-user ec2-user 6144 Jun  6 07:16 9
+
+----
++
+
+
+
+
+
+
+*
+.
+
+| `--file-size`
+a| File size in KB.
+
+| `--file-count`
+a| Number of files per thread. For example, if you want to see how long it takes to generate 1024 files using 16 threads, change the --threads parameter to 16 and the --file-count parameter to 64 (1024÷16=64).
+
+| `--same-dir`
+a| Y will generate all files in the same direct - increasing inode contention. N will generate files in different directories, one for each thread - decreasing inode contention.
+
+|===
++
+
+
+
+
+
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 1*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
