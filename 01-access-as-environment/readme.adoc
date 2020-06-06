@@ -11,7 +11,7 @@ A new AWS environment will be pre-built and available to you for use during this
 
 == Environment Diagram
 
-image::efs-workshop-architecture.png[align="center"]
+image::efs-workshop-architecture.png[align="left"]
 
 == Step-by-step Guide
 
