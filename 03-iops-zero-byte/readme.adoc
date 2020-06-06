@@ -225,7 +225,9 @@ a|0.6
 
 |===
 +
-image::iops-zero-byte-graph.png[align="left", width=600]
+[.left]
+.IOPS and Duration
+image::iops-zero-byte-graph.png[450, scaledwidth="75%"]
 
 == Next section
 
