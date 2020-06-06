@@ -177,6 +177,7 @@ sudo mount -t efs <file-system-id> /efs
 sudo mount -t efs fs-0123abcd /efs
 
 ----
++
 . Did the mount command succeed? Why not?
 . The output of the command should look similar to this:
 +
@@ -201,6 +202,7 @@ sudo mount -t efs -o tls <file-system-id> /efs
 sudo mount -t efs -o tls fs-0123abcd /efs
 
 ----
++
 . Did the mount command succeed?
 . Verify the file system successfully mounted. *_Run_* the following script.
 +
