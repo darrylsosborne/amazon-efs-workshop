@@ -503,12 +503,12 @@ The following table and graphs show the sample results of the IOR 2 GiB file per
 {empty} +
 [.left]
 .Throughput
-image::ior-fpp-throughput.png[align="left", width=420]
+image::ior-fpp-throughput.png[450, scaledwidth="75%"]
 {empty} +
 {empty} +
 [.left]
 .Duration
-image::ior-fpp-duration.png[align="left", width=420]
+image::ior-fpp-duration.png[450, scaledwidth="75%"]
 --
 
 
