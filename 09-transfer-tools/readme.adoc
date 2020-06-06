@@ -261,9 +261,13 @@ The following table and graph show the sample results of using different transfe
 |===========================================================================================
 
 
-
+--
+{empty} +
+{empty} +
+[.left]
+.Transfer tools
 image::transfer-tool-graph.png[align="left"]
-
+--
 
 == Next section
 
