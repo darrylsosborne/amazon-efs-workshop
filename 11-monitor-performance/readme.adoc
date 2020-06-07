@@ -1,4 +1,4 @@
-= IOPS 4KB Files
+= Monitor perforrmance
 :toc:
 :icons:
 :linkattrs:
@@ -7,7 +7,7 @@
 
 == Summary
 
-This section will demonstrate how parallelism increases achievable IOPS of an EFS file system.
+This section will demonstrate how to monitor the performance of an Amazon EFS file system using Amazon CloudWatch.
 
 
 == Duration
@@ -19,209 +19,60 @@ NOTE: It will take approximately 10 minutes to complete this section.
 
 === Generate 4KB files using smallfile
 
-NOTE: smallfile is a python-based distributed POSIX workload generator which can be used to quickly measure performance for a variety of metadata-intensive workloads across an entire cluster. It is an excellent tool to test file systems and I use it regularly to measure and demonstrate operation performance of Amazon EFS and Amazon FSx file systems. Learn more about smallfile from Ben England's github repo - link:https://github.com/distributed-system-analysis/smallfile[smallfile].
-
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
-image::iops-4k.gif[align="left", width=600]
+image::throughput-ior.gif[align="left", width=600]
 
-. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* instance.
+. Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2* - m5n.2xlarge instance.
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*.Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
-. *_Copy_*, *_paste_*, and *_run_* the following command in the browser-based SSH connection window to see how long it takes for smallfile to generate 1024 4KB files on the EFS file system.
+. *_Run_* the following IOR command to generate throughput against the EFS file system.
 +
 [source,bash]
 ----
-job_name=$(echo $(uuidgen)| grep -o ".\{6\}$")
-prefix=$(echo $(uuidgen)| grep -o ".\{6\}$")
-path=/efs/smallfile/${job_name}
-sudo mkdir -p ${path}
+module load mpi/openmpi-x86_64
+sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
+mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g -v -w -r -i 2 -u -F -k -T 300 -o /efs/ior/ior.bin
 
-threads=1
-file_size=4
-file_count=1024
-operation=create
-same_dir=Y
-
-sudo python ~/smallfile/smallfile_cli.py \
---operation ${operation} \
---threads ${threads} \
---file-size ${file_size} \
---files ${file_count} \
---same-dir ${same_dir} \
---hash-into-dirs Y \
---prefix ${prefix} \
---dirs-per-dir ${file_count} \
---files-per-dir ${file_count} \
---top ${path}
 ----
 +
-
-. How many seconds did it take to generate 1024 zero-byte files on the EFS file system?
-* The ouput of the script should look similar to this:
+. While the above script is running in the browser-based SSH connection window, return to the Amazon EC2 console *_click_* *Services* in the top right are of the window.
+. *_Context-click(right-click)_* *CloudWatch* which is under the *Management & Governance* section and *_click_* *Open link in new tab*.
+. *_Click_* the new tab that was just opened to go to the *Amazon CloudWatch console*.
+. *_Click_* *Dashboard* in the left frame.
+. *_Click_* the pre-created dashboard. The name of the dashboard should use the <region>\_<file-system-id> naming convention.
+*  The name should be similar to this:
 +
 [source,bash]
 ----
-host = ip-10-0-0-12,thr = 00,elapsed = 11.924979,files = 1024,records = 1024,status = ok
-total threads = 1
-total files = 1024
-total IOPS = 85
-total data =     0.004 GiB
-100.00% of requested files processed, warning threshold is  70.00
-elapsed time =    11.925
-files/sec = 85.870172
-IOPS = 85.870172
-MiB/sec = 0.335430
+us-east-1_fs-0123abdc
+
 ----
 +
-. What was the IOPS?
-. How many threads were used?
-. Were the files generated in the same directory?
-* HINT: Look at the value of the variable "--same-dir".
-. *_Copy_* the previous smallfile script to your favorite text editor. Experiment with different smallfile parameter settings. Use the table below as a guide. Test with different threads (--threads), file size (--file-size), file count (--file-count) and same directory (--same-dir).
-+
-[cols="10,5"]
-|===
-| Parameter | Description
+. Change the time window for all the widgets. *_Click_* *1h* in the top right of the window.
+. *_Move_* the cursor over lines of graphs in different widgets. Examine the information available from all the widgets during the workshop. Notice the time indicator line appears in all widgets.
+.
+* The easy way to understand how hard your workload is driving the file system is by monitoring the metrics Amazon CloudWatch collects and processes. By monitoring the EFS CloudWatch metrics TotalIOBytes, DataWriteIOBytes, DataReadIOBytes, and MetaDataIOBytes in the CloudWatch console, you can see, in near real-time, your file system's performance. These metrics are sent to CloudWatch at 1-minute intervals and are available for the next 15 months, so you can access historical information about the workload that has run on your file system over time.
 
-| `--threads`
-a| Number of threads.
+* Metric Math, a feature within Amazon CloudWatch, makes it easy to perform math analytics on your metrics to derive additional insights into the health and performance of your AWS resources and applications.
 
-| `--file-size`
-a| File size in KB.
-
-| `--file-count`
-a| Number of files per thread. For example, if you want to see how long it takes to generate 1024 files using 16 threads, change the --threads parameter to 16 and the --file-count parameter to 64 (1024÷16=64).
-
-| `--same-dir`
-a| Y will generate all files in the same direct - increasing inode contention. N will generate files in different directories, one for each thread - decreasing inode contention.
-
-|===
-+
-
-* What different parameters did you test?
-* How did the different parameter options alter the results?
-* The following table and graphs show the sample results of a few tests. Look how increasing the number of threads (increasing parallelism) and writing to different subdirectories (decreasing inode contention) impacts the IOPS and duration.
-
-+
-[cols="3,3,2,3,3,3,3",options="header"]
-|===
-|Threads |File size (KB) |File count (per thread) |File count (total) |Same directory |Duration (seconds) |IOPS
-
-| 1
-| 4
-| 1024
-| 1024
-| Y
-| 11.369
-| 90.066095
-
-| 2
-| 4
-| 512
-| 1024
-| Y
-| 5.820
-| 176.009550
-
-| 4
-| 4
-| 256
-| 1024
-| Y
-| 5.883
-| 174.591562
-
-| 8
-| 4
-| 128
-| 1024
-| Y
-| 5.882
-| 175.117492
-
-| 16
-| 4
-| 64
-| 1024
-| Y
-| 5.629
-| 184.055531
-
-| 32
-| 4
-| 32
-| 1024
-| Y
-| 5.641
-| 186.835993
-
-| 1
-| 4
-| 1024
-| 1024
-| N
-| 11.958
-| 85.633895
-
-| 2
-| 4
-| 512
-| 1024
-| N
-| 5.452
-| 188.621103
-
-| 4
-| 4
-| 256
-| 1024
-| N
-| 2.755
-| 372.936600
-
-| 8
-| 4
-| 128
-| 1024
-| N
-| 1.390
-| 746.051127
-
-| 16
-| 4
-| 64
-| 1024
-| N
-| 0.819
-| 1281.790673
-
-| 32
-| 4
-| 32
-| 1024
-| N
-| 0.535
-| 1973.441341
-
-|===
+* Amazon CloudWatch dashboards are customizable home pages in the CloudWatch console that you can use to monitor resources in a single view. You can use CloudWatch dashboards to create customized views of the metrics and alarms for your AWS resources. You can have up to 500 dashboards in your AWS account. All dashboards are global, not region-specific.
 
 --
+{empty} +
+{empty} +
 [.left]
-.IOPS
-image:iops-4kb-iops-graph.png[450, scaledwidth="75%"]
-[.left]
-.Duration
-image:iops-4kb-duration-graph.png[450, scaledwidth="75%"]
+.EFS Dashboard
+image::dashboard.png[450, scaledwidth="75%"]
 --
+
 
 == Next section
 
 Click the link below to go to the next section.
 
-image::iops-4k.png[link=../04-iops-4k/, align="left",width=420]
-
+image::tear-down-workshop.png[link=../12-tear-down-workshop, align="left",width=420]
 
 
 
