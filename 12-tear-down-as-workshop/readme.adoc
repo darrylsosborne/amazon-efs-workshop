@@ -10,8 +10,8 @@ Because you completed the Amazon EFS AWS sponsored workshop, there are no other 
 
 If you're interested in taking this workshop again, please return to this Github repo and select the link:/../../[Amazon EFS On-Demand Workshop] and complete the workshop using your own account, or click on the link below.
 
-
+{empty} +
+{empty} +
 image::efs-workshops.png[link=../../, align="right",width=420]
 
 
-image::connect-to-instances.png[link=../02-connect-to-instances/, align="right",width=420]
