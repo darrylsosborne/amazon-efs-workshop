@@ -1,4 +1,4 @@
-= Tear down workshop
+= Tear down AWS sponsored workshop
 :icons:
 :linkattrs:
 :imagesdir: ../resources/images
@@ -6,12 +6,6 @@
 
 *Congratulation!* You have completed the Amazon EFS Workshop.
 
-IMPORTANT: *_Click_* the link below that matches the type of workshop you started, **AWS Managed** or **On-demand**. The link will outline the steps you need to follow in order to tear down your workshop environment. It is important to tear down and delete all the AWS resources you created during this workshop so you are no longer charged for these resources.
+Because you completed the Amazon EFS AWS sponsored workshop, there are no other steps you need to do to tear down your workshop. The AWS account provided to you for the workshop will be deleted at the end of the workshop event. If you're interested in taking this workshop again, please return to this Github repo and select the link:../01-create-od-workshop/[Amazon EFS On-Demand Workshop].
 
-
-[cols="1,1"]
-|===
-a|image::tear-down-od-workshop.png[link=../12-tear-down-od-workshop/]
-a|image::tear-down-as-workshop.png[link=../12-tear-down-as-workshop/]
-|===
-
+link:../01-create-od-workshop/[Amazon EFS On-Demand Workshop]
