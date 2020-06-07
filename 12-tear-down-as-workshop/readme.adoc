@@ -6,6 +6,6 @@
 
 *Congratulation!* You have completed the Amazon EFS Workshop.
 
-Because you completed the Amazon EFS AWS sponsored workshop, there are no other steps you need to do to tear down your workshop. The AWS account provided to you for the workshop will be deleted at the end of the workshop event. If you're interested in taking this workshop again, please return to this Github repo and select the link:../01-create-od-workshop/[Amazon EFS On-Demand Workshop].
+Because you completed the Amazon EFS AWS sponsored workshop, there are no other steps you need to do to tear down your workshop. The AWS account provided to you for the workshop will be deleted at the end of the workshop event. If you're interested in taking this workshop again, please return to this Github repo and select the link:./amazon-efs-workshop/[Amazon EFS On-Demand Workshop] and complete the workshop using your own account.
 
 link:../01-create-od-workshop/[Amazon EFS On-Demand Workshop]
