@@ -13,6 +13,6 @@ If you're interested in taking this workshop again, please return to this Github
 {empty} +
 {empty} +
 --
-image::efs-workshops.png[link=../../, align="right",width=420]
+image::efs-workshops.png[link=/../../, align="right",width=420]
 
 
