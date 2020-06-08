@@ -273,6 +273,6 @@ image::transfer-tool-graph.png[align="left"]
 
 Click the link below to go to the next section.
 
-image::client-access.png[link=../10-client-access, align="left",width=420]
+image::monitor-performance.png[link=../10-monitor-performance, align="left",width=420]
 
 

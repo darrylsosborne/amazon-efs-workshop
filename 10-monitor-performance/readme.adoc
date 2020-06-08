@@ -17,7 +17,7 @@ NOTE: It will take approximately 10 minutes to complete this section.
 
 == Step-by-step Guide
 
-=== Generate 4KB files using smallfile
+=== Monitor performance
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
@@ -72,7 +72,7 @@ image::dashboard.png[450, scaledwidth="75%"]
 
 Click the link below to go to the next section.
 
-image::tear-down-workshop.png[link=../12-tear-down-workshop, align="left",width=420]
+image::client-access.png[link=../11-client-access, align="left",width=420]
 
 
 
