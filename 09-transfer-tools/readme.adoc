@@ -27,7 +27,6 @@ image::transfer-tools.gif[align="left", width=600]
 +
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, refresh or reload the current browser tab. If that doesn't resolve the issue, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*. Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
-. This instance was reloaded with approx. five thousand 1 MiB files totaling approx. 5 GB of data, all stored on an the attached EBS GP2 volume.
 . *_Run_* the following command in the browser-based SSH connection window to generate new sample data of five thousand 1 MB files totaling approx. 5 GB of data. This will be stored on an the attached EBS GP2 volume.
 * This section will use different transfer tools to copy this sample data from EBS to EFS.
 +
