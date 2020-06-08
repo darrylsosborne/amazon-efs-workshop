@@ -67,7 +67,7 @@ NOTE: With provisioned throughput mode you can provision the desired throughput 
 ----
 sudo pkill -9 ior
 ----
-+
+
 
 == Next section
 
