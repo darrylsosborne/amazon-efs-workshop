@@ -471,10 +471,18 @@ The following table and graphs show the sample results of the IOR 2 GiB single s
 | Read      | 64      | 1         | 420.38            | 5.11
 |=========================================================================
 
-
-|===
-a|image::ior-ssf-throughput.png[align="left", width=420] a|image::ior-ssf-duration.png[align="left", width=420]
-|===
+--
+{empty} +
+{empty} +
+[.left]
+.Single Shared File Throughput
+image::ior-ssf-throughput.png[align="left"]
+{empty} +
+{empty} +
+[.left]
+.Single Shared File Duration
+image::ior-ssf-duration.png[align="left"]
+--
 
 The following table and graphs show the sample results of the IOR 2 GiB file per process (FPP) tests. Look how increasing the number of threads (increasing parallelism) impacts the throughput and duration.
 
@@ -502,13 +510,13 @@ The following table and graphs show the sample results of the IOR 2 GiB file per
 {empty} +
 {empty} +
 [.left]
-.Throughput
-image::ior-fpp-throughput.png[450, scaledwidth="75%"]
+.File Per Process Throughput
+image::ior-fpp-throughput.png[align="left"]
 {empty} +
 {empty} +
 [.left]
-.Duration
-image::ior-fpp-duration.png[450, scaledwidth="75%"]
+.File Per Process Duration
+image::ior-fpp-duration.png[align="left"]
 --
 
 
