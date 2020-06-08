@@ -28,19 +28,6 @@ image::transfer-tools.gif[align="left", width=600]
 TIP: If the SSH connection has timed out, e.g. the session is unresponsive, refresh or reload the current browser tab. If that doesn't resolve the issue, close the browser-based SSH connection window and create a new one. Return to the link:https://console.aws.amazon.com/ec2/[Amazon EC2] console. *_Click_* the radio button next to the instance with the name *EFS Workshop Linux Instance 2*. *_Click_* the *Connect* button. *_Click_* the radio button next to  *EC2 Instance Connect (browser-based SSH connection)*. Leave the default user name as *ec2-user* and *_click_* *Connect*.
 +
 . This instance was reloaded with approx. five thousand 1 MiB files totaling approx. 5 GB of data, all stored on an the attached EBS GP2 volume. This section will use different transfer tools to copy this dataset from EBS to EFS.
-. *_Run_* the following command in the browser-based SSH connection window to generate new sample data.
-+
-[source,bash]
-----
-sudo rm /ebs/data-1m/* -r
-sudo rm /ebs/smallfile/* -r
-
-sudo python /home/ec2-user/smallfile/smallfile_cli.py --operation create --threads 1 --file-size 1024 --files 5000 --same-dir Y --dirs-per-dir 1024 --hash-into-dirs Y --files-per-dir 10240 --pause 500 --top /ebs/smallfile
-
-cp -R /ebs/smallfile/file_srcdir/ /ebs/data-1m/
-
-----
-+
 . Run this command to validate the total size and count of files to be copied.
 +
 [source,bash]
