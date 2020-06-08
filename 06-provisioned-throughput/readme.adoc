@@ -12,7 +12,7 @@ This section will demonstrate how to scale throughput in provisioned throughput 
 
 == Duration
 
-NOTE: It will take approximately 15 minutes to complete this section.
+NOTE: It will take approximately 10 minutes to complete this section.
 
 
 == Step-by-step Guide
@@ -36,7 +36,7 @@ sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches'
 mpirun --npernode 32 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 64 -g -v -w -i 1 -u -F -k -D 0 -o /efs/ior/ior.bin
 ----
 +
-. Generate file system activity by continuously reading the test files for five minutes. *_Run_* the following script in the same browser-based SSH connection window. The last commands run nload, a real-time network monitoring tool to see incoming and outgoing network traffic.
+. Generate file system activity by continuously reading the test files for five minutes. *_Run_* the following script in the same browser-based SSH connection window. The last commands run nload, a real-time network monitoring tool to see incoming and outgoing network traffic. After running the following script to start the read test, continue with the remaining steps in this section.
 +
 [source,bash]
 ----
