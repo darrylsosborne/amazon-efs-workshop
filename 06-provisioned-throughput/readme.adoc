@@ -60,7 +60,7 @@ nload -u M
 +
 NOTE: With provisioned throughput mode you can provision the desired throughput independent of the amount of data stored in the file system. Throughput modes can be changed (bursting to provisioned or provisioned to bursting) as long as it has been more than 24 hours since the last throughput mode change. When in provisioned throughput mode, the amount of throughput provisioned can decreased as long as it has been more than 24 hours since the last throughput decrease or the last throughput mode change. The amount of throughput provisioned can be increased at anytime.
 +
-. Press control+Z on the keyboard to exit nload.
+. *_Press_* control+Z on the keyboard to exit nload.
 . If you want to cancel the read activity before it completes in five minutes, *_run_* the following script in the same browser-based SSH connection window.
 +
 [source,bash]
