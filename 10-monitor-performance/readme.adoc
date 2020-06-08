@@ -21,7 +21,7 @@ NOTE: It will take approximately 10 minutes to complete this section.
 
 IMPORTANT: Read through all steps below and watch the quick video before continuing.
 
-image::throughput-ior.gif[align="left", width=600]
+image::monitor-performance.gif[align="left", width=600]
 
 . Return to the browser-based SSH connection of the *EFS Workshop Linux Instance 2*.
 +
