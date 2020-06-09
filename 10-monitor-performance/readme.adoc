@@ -41,7 +41,7 @@ mpirun --npernode 64 --oversubscribe ior --posix.odirect -t 1m -b 1m -s 1024 -g 
 . *_Context-click(right-click)_* *CloudWatch* which is under the *Management & Governance* section and *_click_* *Open link in new tab*.
 . *_Click_* the new tab that was just opened to go to the *Amazon CloudWatch console*.
 . *_Click_* *Dashboard* in the left frame.
-. *_Click_* the pre-created dashboard. The name of the dashboard should use the <region>\_<file-system-id> naming convention.
+. *_Click_* the pre-created dashboard. The name of the dashboard should use the <region>_<file-system-id> naming convention.
 *  The name should be similar to this:
 +
 [source,bash]
