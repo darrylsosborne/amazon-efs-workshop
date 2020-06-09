@@ -123,7 +123,7 @@ sys	0m4.584s
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷274(seconds)=18.25MB/s.
 * Why is so slow but faster than rsync?
   * cp is also a single-threaded copy tool but isn't as chatty over the network as rsync, to throughput is faster.
-. Run this command to validate the total size and count of the files copied.
+. *_Run_* the following command to validate the total size and count of the files copied.
 +
 [source,bash]
 ----
@@ -167,7 +167,7 @@ sys	0m7.651s
 ----
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷163(seconds)=30.67MB/s.
-. Run this command to validate the total size and count of the files copied.
+. *_Run_* the following command to validate the total size and count of the files copied.
 +
 [source,bash]
 ----
@@ -202,7 +202,7 @@ sys	0m19.323s
 ----
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷38(seconds)=131.58MB/s.
-. Run this command to validate the total size and count of the files copied.
+. *_Run_* the following command to validate the total size and count of the files copied.
 +
 [source,bash]
 ----
@@ -248,7 +248,7 @@ sys	0m14.830s
 ----
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷33(seconds)=151.52MB/s.
-. Run this command to validate the total size and count of the files copied.
+. *_Run_* the following command to validate the total size and count of the files copied.
 +
 [source,bash]
 ----
