@@ -211,9 +211,7 @@ tree --du -h /efs/parallelcp/${instance_id}
 
 === Fpart + GNU Parallel + cp
 
-Fpart is a tool that helps sort file trees and pack them into pages or partitions. Learn more about fpart - link:https://github.com/martymac/fpart/[https://github.com/martymac/fpart].
-
-Copyright (c) 2011-2020 Ganael LAPLANCHE <ganael.laplanche@martymac.org>
+Fpart is a tool that helps sort file trees and pack them into pages or partitions. Learn more about fpart - link:https://github.com/martymac/fpart/[https://github.com/martymac/fpart]. Copyright (c) 2011-2020 Ganael LAPLANCHE <ganael.laplanche@martymac.org>
 
 GNU Parallel is an amazing tool that parallelizes single-threaded commands. Learn more about GNU Parallel - link:https://www.gnu.org/software/parallel/[https://www.gnu.org/software/parallel/]. O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
 
