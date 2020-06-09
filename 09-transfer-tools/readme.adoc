@@ -98,7 +98,6 @@ sys	0m6.019s
 tree --du -h /efs/rsync/${instance_id}
 
 ----
-+
 
 === Copy (cp)
 
@@ -131,7 +130,7 @@ sys	0m4.584s
 tree --du -h /efs/cp/${instance_id}
 
 ----
-+
+
 
 === fpsync
 
@@ -175,7 +174,7 @@ sys	0m7.651s
 tree --du -h /efs/fpsync/${instance_id}
 
 ----
-+
+
 
 === GNU Parallel + cp
 
@@ -210,7 +209,7 @@ sys	0m19.323s
 tree --du -h /efs/parallelcp/${instance_id}
 
 ----
-+
+
 
 === Fpart + GNU Parallel + cp
 
