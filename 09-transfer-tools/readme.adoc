@@ -179,7 +179,7 @@ tree --du -h /efs/fpsync/${instance_id}
 === GNU Parallel + cp
 
 GNU Parallel is an amazing tool that parallelizes single-threaded commands. Learn more about GNU Parallel - link:https://www.gnu.org/software/parallel/[https://www.gnu.org/software/parallel/].
-+
+
 * O. Tange (2018): GNU Parallel 2018, March 2018, https://doi.org/10.5281/zenodo.1146014.
 +
 . *_Run_* the following cp + GNU parallel command to see how long it takes to copy the sample dataset from EBS to EFS. Caches are dropped so all reads come from the EBS volume and not memory.
