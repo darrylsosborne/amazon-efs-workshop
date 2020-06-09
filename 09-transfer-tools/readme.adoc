@@ -90,7 +90,7 @@ sys	0m6.019s
 +
 * Calculate the average throughput achieved. Divide 5000 MB by the number of seconds it took for the copy, e.g. 5000(MB)÷359(seconds)=13.93MB/s.
 * Why is rsync so slow?
-  * rync is a single-threaded copy tool that is very chatty over the network. These two attributes don't make rsync a good tool to use to copy data to and from an EFS file system because it doesn't take advantage of the distributed data storage design of EFS.
+** rync is a single-threaded copy tool that is very chatty over the network. These two attributes don't make rsync a good tool to use to copy data to and from an EFS file system because it doesn't take advantage of the distributed data storage design of EFS.
 . Run this command to validate the total size and count of the files copied.
 +
 [source,bash]
